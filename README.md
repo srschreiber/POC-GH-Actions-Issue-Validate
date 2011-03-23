@@ -1,5 +1,9 @@
 # GitHub VPN
 
+Use this repo to setup openvpn configuration on your dev machine.
+Assumes you have a sparse bundle setup at `/Volumes/GitHub`. You'll also
+need to setup ssh keys to be able to ssh to server over the VPN.
+
 ## Setup
 
 * Ask [Tim](tim@github.com) to generate some VPN keys for you
@@ -20,6 +24,16 @@
       open production.tblk
       open staging.tblk
       open ci.tblk
+
+* Connect to the VPNs from the menu bar
+
+<center><img src='http://tunnelblick.googlecode.com/files/tb-menu-screenshot-202x144px-2010-05-27.png'/></center>
+
+* Test that the connection is working using these links
+
+  * [CI](http://ci2.rs.github.com:8080/)
+  * [Production](http://aux1.rs.github.com:9292/)
+  * [Staging](http://aux1.stg.github.com:9292/)
 
 ## Uninstall
 
