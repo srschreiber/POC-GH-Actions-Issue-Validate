@@ -4,7 +4,7 @@ Use this repo to setup openvpn on your dev machine.
 
 Assumes you have a sparse bundle setup at `/Volumes/GitHub/`.
 
-You'll also need to setup ssh keys to be able to ssh to server over the VPN.
+You'll also need to setup ssh keys to be able to ssh to servers over the VPN.
 
 ## Setup
 
@@ -33,7 +33,7 @@ You'll also need to setup ssh keys to be able to ssh to server over the VPN.
 
   ![](http://tunnelblick.googlecode.com/files/tb-menu-screenshot-202x144px-2010-05-27.png)
 
-* Test that the connection is working using these links
+* Test that the connections are working using these links
 
   * [CI](http://ci2.rs.github.com:8080/)
   * [Production](http://aux1.rs.github.com:9292/)
