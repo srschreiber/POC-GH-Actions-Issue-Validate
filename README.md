@@ -8,7 +8,7 @@ You'll also need to setup ssh keys to be able to ssh to servers over the VPN.
 
 ## Setup
 
-* Ask [Tim](tim@github.com) to generate some VPN keys for you
+* Ask [Tim](mailto:tim@github.com) to generate some VPN keys for you
 
 * Clone this repo
 
