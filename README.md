@@ -40,9 +40,20 @@ You'll also need to setup ssh keys to be able to ssh to servers over the VPN.
   * [Production](http://aux1.rs.github.com:9292/)
   * [Staging](http://aux1.stg.github.com:9292/)
 
+## Updating
+
+Tunnelblick makes copies of these configuration files in
+`~/Library/Application\ Support/Tunnelblick/Configurations/`, so you
+must remove the old configuration and re-import new versions.
+
+    sudo rm -rf ~/Library/Application\ Support/Tunnelblick/Configurations/ci.tblk
+    open ci.tblk
+
+Alternatively, you can edit configuration files from inside the
+Tunnelblick interface, under `Details > Edit Configuration > Unprotect and Modify`
+
 ## Uninstall
 
-Tunnelblick makes copies of the configuration files in `~/Library`, so
-just delete them.
+Simply remove all the configurations from Tunnelblick.
 
     sudo rm -rf ~/Library/Application\ Support/Tunnelblick/Configurations/*.tblk
