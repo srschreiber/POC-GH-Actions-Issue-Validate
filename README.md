@@ -12,23 +12,21 @@ You'll also need to setup ssh keys to be able to ssh to servers over the VPN.
 
 * Clone this repo
 
-      cd /Volumes/GitHub
-      git clone git@github.com:github/vpn
+        cd /Volumes/GitHub
+        git clone git@github.com:github/vpn
 
 * Move the keys into the checkout
 
-      mv ~/Downloads/ca_cert             /Volumes/GitHub/vpn/KEYS/ca.crt
-      mv ~/Downloads/tmm1.github.com_crt /Volumes/GitHub/vpn/KEYS/my.crt
-      mv ~/Downloads/tmm1.github.com_key /Volumes/GitHub/vpn/KEYS/my.key
-      chmod 0600 /Volumes/GitHub/vpn/KEYS/*
+        mv ~/Downloads/ca_cert             /Volumes/GitHub/vpn/KEYS/ca.crt
+        mv ~/Downloads/tmm1.github.com_crt /Volumes/GitHub/vpn/KEYS/my.crt
+        mv ~/Downloads/tmm1.github.com_key /Volumes/GitHub/vpn/KEYS/my.key
+        chmod 0600 /Volumes/GitHub/vpn/KEYS/*
 
 * Download and install [Tunnelblick](http://code.google.com/p/tunnelblick): http://tunnelblick.googlecode.com/files/Tunnelblick_3.1.6.dmg
 
 * Import the configurations into Tunnelblick
 
-      open production.tblk
-      open staging.tblk
-      open ci.tblk
+        open *.tblk
 
 * Connect to the VPNs from the menu bar
 
@@ -46,8 +44,8 @@ Tunnelblick makes copies of these configuration files in
 `~/Library/Application\ Support/Tunnelblick/Configurations/`, so you
 must remove the old configuration and re-import new versions.
 
-    sudo rm -rf ~/Library/Application\ Support/Tunnelblick/Configurations/ci.tblk
-    open ci.tblk
+      sudo rm -rf ~/Library/Application\ Support/Tunnelblick/Configurations/ci.tblk
+      open ci.tblk
 
 Alternatively, you can edit configuration files from inside the
 Tunnelblick interface, under `Details > Edit Configuration > Unprotect and Modify`
@@ -56,4 +54,4 @@ Tunnelblick interface, under `Details > Edit Configuration > Unprotect and Modif
 
 Simply remove all the configurations from Tunnelblick.
 
-    sudo rm -rf ~/Library/Application\ Support/Tunnelblick/Configurations/*.tblk
+      sudo rm -rf ~/Library/Application\ Support/Tunnelblick/Configurations/*.tblk
