@@ -22,7 +22,7 @@ You'll also need to setup ssh keys to be able to ssh to servers over the VPN.
         mv ~/Downloads/tmm1.github.com_key /Volumes/GitHub/vpn/KEYS/my.key
         chmod 0600 /Volumes/GitHub/vpn/KEYS/*
 
-* Download and install [Tunnelblick](http://code.google.com/p/tunnelblick): http://code.google.com/p/tunnelblick/downloads/detail?name=Tunnelblick_3.2beta34.dmg
+* Download and install [Tunnelblick](http://code.google.com/p/tunnelblick/wiki/DownloadsEntry?tm=2): http://code.google.com/p/tunnelblick/wiki/DownloadsEntry?tm=2
 
 * Import the configurations into Tunnelblick
 
