@@ -2,7 +2,8 @@
 
 Use this repo to setup openvpn on your dev machine.
 
-Assumes you have a sparse bundle setup at `/Volumes/GitHub/`.
+This README assumes you've setup your machine with github/setup-puppet
+and that your github repos are under `~/github` as a result.
 
 You'll also need to setup ssh keys to be able to ssh to servers over the VPN.
 
@@ -12,25 +13,26 @@ You'll also need to setup ssh keys to be able to ssh to servers over the VPN.
 
 * Clone this repo
 
-        cd /Volumes/GitHub
+        cd ~/github
         git clone git@github.com:github/vpn
 
 * Move the keys into the checkout
 
-        mv ~/Downloads/ca_cert             /Volumes/GitHub/vpn/KEYS/ca.crt
-        mv ~/Downloads/tmm1.github.com_crt /Volumes/GitHub/vpn/KEYS/my.crt
-        mv ~/Downloads/tmm1.github.com_key /Volumes/GitHub/vpn/KEYS/my.key
-        chmod 0600 /Volumes/GitHub/vpn/KEYS/*
+        mv ~/Downloads/ca_cert             ~/github/vpn/KEYS/ca.crt
+        mv ~/Downloads/*.github.com_crt    ~/github/vpn/KEYS/my.crt
+        mv ~/Downloads/*.github.com_key    ~/github/vpn/KEYS/my.key
+        chmod 0600 ~/github/vpn/KEYS/*
 
-* Download and install [Tunnelblick](http://code.google.com/p/tunnelblick/wiki/DownloadsEntry?tm=2): http://code.google.com/p/tunnelblick/wiki/DownloadsEntry?tm=2
+* Download and install [Viscosity](http://www.thesparklabs.com/viscosity/): http://www.thesparklabs.com/viscosity/
 
-* Import the configurations into Tunnelblick
+* Open Viscosity
+    * Go to Viscosity's preferences
+    * In the lower left corner of the Connections pane, click the + button
+    * Select 'Import Connection'
+    * Navigate to ~/github/vpn and import each of the vpn.conf files in the .tblk directories
+    * For each one, you'll need to to update the name to something reasonable (eg. production, staging)
 
-        open *.tblk
-
-* Connect to the VPNs from the menu bar
-
-  ![](http://tunnelblick.googlecode.com/files/tb-menu-screenshot-202x144px-2010-05-27.png)
+* Now you should be able to connect to the VPNs from the menu bar
 
 * Test that the connections are working using these links
 
@@ -39,19 +41,14 @@ You'll also need to setup ssh keys to be able to ssh to servers over the VPN.
 
 ## Updating
 
-Tunnelblick makes copies of these configuration files in
-`~/Library/Application\ Support/Tunnelblick/Configurations/`, so you
-must remove the old configuration and re-import new versions.  Be sure
-to quit Tunnelblick if it's already running.
-
-      sudo rm -rf ~/Library/Application\ Support/Tunnelblick/Configurations/staging.tblk
-      open staging.tblk
-
-Alternatively, you can edit configuration files from inside the
-Tunnelblick interface, under `Details > Edit Configuration > Unprotect and Modify`
+Viscosity makes copies of all the configurations files and keys in the
+`~/Library/Application Support/Viscosity/OpenVPN` directory. If you're
+updating your configuration, you'll need to either edit them via the
+app OR quit Viscosity first and then open up the config files and edit them
+by hand.
 
 ## Uninstall
 
 Simply remove all the configurations from Tunnelblick.
 
-      sudo rm -rf ~/Library/Application\ Support/Tunnelblick/Configurations/*.tblk
+      sudo rm -rf ~/Library/Application\ Support/Viscosity/OpenVPN/*
