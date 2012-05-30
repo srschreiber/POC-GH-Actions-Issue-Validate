@@ -49,6 +49,6 @@ by hand.
 
 ## Uninstall
 
-Simply remove all the configurations from Tunnelblick.
+Simply remove all the configurations from Viscosity.
 
       sudo rm -rf ~/Library/Application\ Support/Viscosity/OpenVPN/*
