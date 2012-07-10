@@ -11,8 +11,6 @@ You'll also need to setup ssh keys to be able to ssh to servers over the VPN.
 
 * Ask the [Ops Mailing List](mailto:ops@github.com) to generate some VPN keys for you
 
-* Download and install [Viscosity](http://www.thesparklabs.com/viscosity/): http://www.thesparklabs.com/viscosity/
-
 * Clone this repo
 
     cd ~/github
@@ -50,8 +48,12 @@ updating your configuration, you'll need to either edit them via the
 app OR quit Viscosity first and then open up the config files and edit them
 by hand.
 
+If you want to blow away your current config and setup things from scratch:
+
+    killall Viscosity
+    make clean
+    make viscosity
+
 ## Uninstall
 
-Simply remove all the configurations from Viscosity.
-
-      sudo rm -rf ~/Library/Application\ Support/Viscosity/OpenVPN/*
+    make clean
