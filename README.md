@@ -59,6 +59,12 @@ If you want to blow away your current config and setup things from scratch:
     make clean
     make viscosity
 
+## Problem?
+
+[Create a new issue](https://github.com/github/vpn/issues/new) and cc @github/ops.
+Please include the logs from any failed connections. Someone from the Ops team
+will help you as soon as they can!
+
 ## Uninstall
 
     make clean
