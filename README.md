@@ -1,15 +1,15 @@
 # GitHub VPN
 
-Use this repo to setup openvpn on your dev machine.
+Access all of the things. Securely.
 
-This README assumes you've setup your machine with github/setup-puppet
-and that your github repos are under `~/github` as a result.
+This README assumes the following:
 
-You'll also need to setup ssh keys to be able to ssh to servers over the VPN.
+* You've setup your machine with github/setup-puppet
+* Your GitHub repos are under `~/github` as a result of using The Setup
+* You've asked the [Ops Mailing List](mailto:ops@github.com) to setup SSH and generate VPN keys for you
+* You've received an email back from a fine Opstocat with a path that looks like `jnewland@gold1-ext.rs.github.com:jnewland.github.com.tgz`
 
 ## Setup
-
-* Ask the [Ops Mailing List](mailto:ops@github.com) to generate some VPN keys for you
 
 * Clone this repo
 
