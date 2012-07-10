@@ -51,6 +51,7 @@ by hand.
 If you want to blow away your current config and setup things from scratch:
 
     killall Viscosity
+    sudo killall openvpn
     make clean
     make viscosity
 
