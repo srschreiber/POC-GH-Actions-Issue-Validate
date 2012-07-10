@@ -13,15 +13,19 @@ This README assumes the following:
 
 * Clone this repo
 
-    cd ~/github
-    git clone git@github.com:github/vpn
-    cd vpn
+```
+cd ~/github
+git clone git@github.com:github/vpn
+cd vpn
+```
 
 * Download your keys and extract them into the checkout:
 
-    scp USER@gold1-ext.rs.github.com:USER.github.com.tgz .
-    tar xzvf USER.github.com.tgz
-    make viscosity
+```
+scp USER@gold1-ext.rs.github.com:USER.github.com.tgz .
+tar xzvf USER.github.com.tgz
+make viscosity
+```
 
 * Look for a new icon that looks like a globe in your menu bar. This is Viscosity. Click it, and try connecting to each of the VPNs listed.
 
