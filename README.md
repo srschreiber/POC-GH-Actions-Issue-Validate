@@ -23,9 +23,9 @@ This README assumes the following:
     tar xzvf USER.github.com.tgz
     make viscosity
 
-* Now you should be able to connect to the VPNs from the menu bar. Boom.
+* Look for a new icon that looks like a globe in your menu bar. This is Viscosity. Click it, and try connecting to each of the VPNs listed.
 
-* Test that the connections are working using these links
+* Test that the connections are working using these links:
 
   * [Production](http://aux1.rs.github.com:9292/)
   * [Staging](http://aux1.stg.github.com:9292/)
