@@ -16,8 +16,8 @@ viscosity: ca_crt
 	@open office.visc
 
 clean:
-	@chmod 700 *.visc/*.{key,crt}
 	@rm -rf ~/Library/Application\ Support/Viscosity/OpenVPN/*
+	@rm *.visc/*.{key,crt} || true
 
 ca_crt:
 	@test -f KEYS/ca.crt && cp KEYS/ca.crt ca_crt
