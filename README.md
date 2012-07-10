@@ -11,38 +11,28 @@ You'll also need to setup ssh keys to be able to ssh to servers over the VPN.
 
 * Ask the [Ops Mailing List](mailto:ops@github.com) to generate some VPN keys for you
 
-* Clone this repo
-
-        cd ~/github
-        git clone git@github.com:github/vpn
-
-* Move the keys into the checkout
-
-        mv ~/Downloads/ca_cert             ~/github/vpn/KEYS/ca.crt
-        mv ~/Downloads/*.github.com_crt    ~/github/vpn/KEYS/my.crt
-        mv ~/Downloads/*.github.com_key    ~/github/vpn/KEYS/my.key
-        chmod 0600 ~/github/vpn/KEYS/*
-
 * Download and install [Viscosity](http://www.thesparklabs.com/viscosity/): http://www.thesparklabs.com/viscosity/
 
-* Open Viscosity
-    * Go to Viscosity's preferences
-    * In the lower left corner of the Connections pane, click the + button
-    * Select 'Import Connection'
-    * Navigate to ~/github/vpn and import each of the vpn.conf files in the .tblk directories
-    * For each one, you'll need to to update the name to something reasonable (eg. production, staging)
+* Clone this repo
 
-**It is important to note that importing the config may not "just work" due to bullshit regarding relative paths.
-If things don't work, see the "Fixing Config" section below.**
+    cd ~/github
+    git clone git@github.com:github/vpn
+    cd vpn
 
-* Now you should be able to connect to the VPNs from the menu bar
+* Download your keys and extract them into the checkout:
+
+    scp USER@gold1-ext.rs.github.com:USER.github.com.tgz .
+    tar xzvf USER.github.com.tgz
+    make viscosity
+
+* Now you should be able to connect to the VPNs from the menu bar. Boom.
 
 * Test that the connections are working using these links
 
   * [Production](http://aux1.rs.github.com:9292/)
   * [Staging](http://aux1.stg.github.com:9292/)
 
-* Finally, register your copy of Viscosity with this info:
+* Register your copy of Viscosity with this info:
 
 ```
 Name:  GitHub
@@ -65,13 +55,3 @@ by hand.
 Simply remove all the configurations from Viscosity.
 
       sudo rm -rf ~/Library/Application\ Support/Viscosity/OpenVPN/*
-
-## Fixing Config
-
-![](https://github-images.s3.amazonaws.com/skitch/vpn_click_prefs-20120628-203402.png)
-
-![](https://github-images.s3.amazonaws.com/skitch/vpn_docs_edit_conn-20120628-203500.png)
-
-![](https://github-images.s3.amazonaws.com/skitch/vpn_set_files-20120628-203627.png)
-
-Now it should work! Repeat for each other connection as needed.
