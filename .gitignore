@@ -1,3 +1,6 @@
-KEYS/ca.crt
-KEYS/my.crt
-KEYS/my.key
+ca_crt
+*.github.com_key
+*.github.com_crt
+*.tgz
+*.key
+*.crt
