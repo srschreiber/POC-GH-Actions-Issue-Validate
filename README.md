@@ -27,6 +27,8 @@ tar xzvf USER.github.com.tgz
 make viscosity
 ```
 
+* If you are upgrading from an older install, just copy the `~/github/vpn/KEYS` directory over and run `make viscosity`.
+
 * Look for a new icon that looks like a globe in your menu bar. This is Viscosity. Click it, and try connecting to each of the VPNs listed.
 
 * Test that the connections are working using these links:
