@@ -4,9 +4,9 @@ Access all of the things. Securely.
 
 This README assumes the following:
 
-* You've setup your machine with github/setup-puppet
-* Your GitHub repos are under `~/github` as a result of using The Setup
-* You've asked the [Ops Mailing List](mailto:ops@github.com) to setup SSH and generate VPN keys for you
+* You've setup your machine with github/setup-puppet / Boxen.
+* Your GitHub repos are under `~/github` as a result of using Boxen.
+* You've setup [SSH access to production](https://cerebro.githubapp.com/articles/production-shell-access) by generating a GitHub specific key and sending it to the ops@github.com email list.
 * You've received an email back from a fine Opstocat with a path that looks like `jnewland@gold1-ext.rs.github.com:jnewland.github.com.tgz`
 
 ## Setup
