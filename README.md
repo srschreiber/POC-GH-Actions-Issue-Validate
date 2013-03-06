@@ -34,7 +34,6 @@ make viscosity
 * Test that the connections are working using these links:
 
   * [Production](http://aux1.rs.github.com:9292/)
-  * [Staging](http://aux1.stg.github.com:9292/)
 
 * Register your copy of Viscosity with this info:
 
