@@ -94,6 +94,6 @@ on OpenVPN.net and get the latest Windows installer
    menu entry (if you only installed one config) or submenus for each config.
 
 #### Out of TAP devices?
-OpenVPN will only add one TAP device initially. You need one TAP each 
+OpenVPN will only add one TAP device initially. You need one TAP for each 
 _concurrent_ VPN connection. If you need more there's a start menu entry 
 called "Add a new TAP virtual ethernet adapter".
