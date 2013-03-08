@@ -4,6 +4,7 @@ Access all of the things. Securely.
 
 This README assumes the following:
 
+* You're on a Mac (if you're on Windows see the section towards the bottom of this file)
 * You've setup your machine with github/setup-puppet / Boxen.
 * Your GitHub repos are under `~/github` as a result of using Boxen.
 * You've setup [SSH access to production](https://cerebro.githubapp.com/articles/production-shell-access) by generating a GitHub specific key and sending it to the ops@github.com email list.
@@ -69,3 +70,16 @@ will help you as soon as they can!
 ## Uninstall
 
     make clean
+
+## Running Windows?
+
+Good for you! The Viscosity client that Mac users use is just a GUI for OpenVPN which works great on Windows. Finding the download is a bit tricky though. Get to the [download page](http://openvpn.net/index.php/open-source/downloads.html) under the community section of OpenVPN.net, download the latest Windows installer (most likely you'll want the 64bit version). The installer will prompt you to install some fake network card drivers. You won't need anything else since the Windows version of OpenVPN includes a GUI.
+
+Once you're done installing go ahead and download the production, staging or office (or all of them) Viscosity configuration files in this repository and change the file extension to .ovpn. Move the config files inside the config directory where you installed OpenVPN (usually c:\Program Files\OpenVPN\config).
+
+Unpack the tar.gz file you got from the ops team ([7-Zip](http://www.7-zip.org/) is yor friend). And place them in the same directory. Now all you have to do is either rename the three files to ca.crt, key.key and cert.crt or (if you like me use OpenVPN for more than GitHub) open the config file(s) and change the ca, key and cert config options to point to the proper locations.
+
+Start OpenVPN GUI **in administrator mode** or it won't have enough permissions to use the fake network drivers. Right click on the OpenVPN icon in the tray and you should see either just a connect menu entry (if you only installed one config) or submenus for each config. Hit connect and you're done.
+
+### Out of TAP devices?
+OpenVPN will only add one TAP device initially. You only need one TAP each _concurrent_ VPN connection so if you're not planning on being connected to more than one of prod, staging and office at a time you're good. If you need more OpenVPN adds a start menu entry for doing just that called "Add a new TAP virtual ethernet adapter".
