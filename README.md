@@ -73,7 +73,6 @@ will help you as soon as they can!
 
 ## Running Windows?
 
-### Install
 Good for you! Get to the 
 [download page](http://openvpn.net/index.php/open-source/downloads.html)
 on OpenVPN.net and get the latest Windows installer
