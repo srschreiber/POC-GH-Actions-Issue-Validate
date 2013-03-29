@@ -16,7 +16,7 @@ This README assumes the following:
 
 ```
 gh-setup vpn
-cd vpn ~/github/vpn
+cd ~/github/vpn
 ```
 
 * Download your keys and extract them into the checkout:
