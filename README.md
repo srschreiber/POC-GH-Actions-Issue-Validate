@@ -12,7 +12,7 @@ This README assumes the following:
 
 ## Setup
 
-* Run the setup
+* Run Boxen
 
 ```
 boxen vpn
