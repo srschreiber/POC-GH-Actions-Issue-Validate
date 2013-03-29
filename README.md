@@ -12,12 +12,11 @@ This README assumes the following:
 
 ## Setup
 
-* Clone this repo
+* Run the setup
 
 ```
-cd ~/github
-git clone git@github.com:github/vpn
-cd vpn
+gh-setup vpn
+cd vpn ~/github/vpn
 ```
 
 * Download your keys and extract them into the checkout:
