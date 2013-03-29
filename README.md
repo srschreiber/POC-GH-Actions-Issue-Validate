@@ -15,7 +15,7 @@ This README assumes the following:
 * Run the setup
 
 ```
-gh-setup vpn
+boxen vpn
 cd ~/github/vpn
 ```
 
