@@ -23,8 +23,8 @@ cd vpn
 * Download your keys and extract them into the checkout:
 
 ```
-scp USER@gold1-ext.rs.github.com:USER.github.com.tgz .
-tar xzvf USER.github.com.tgz
+scp $USER@gold1-ext.rs.github.com:$USER.github.com.tgz .
+tar xzvf $USER.github.com.tgz
 make viscosity
 ```
 
