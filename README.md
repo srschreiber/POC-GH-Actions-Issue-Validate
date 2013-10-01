@@ -7,7 +7,7 @@ This README assumes the following:
 * You're on a Mac ([running Windows?](#running-windows))
 * You've setup your machine with github/setup-puppet / Boxen.
 * Your GitHub repos are under `~/github` as a result of using Boxen.
-* You've setup [SSH access to production](https://cerebro.githubapp.com/articles/production-shell-access) by generating a GitHub specific key and sending it to the ops@github.com email list.
+* You've setup [SSH access to production](https://cerebro.githubapp.com/articles/production-shell-access) by generating a GitHub specific key and [creating a new issue](https://github.com/github/vpn/issues/new) with cc @github/ops..
 * You've received an email back from a fine Opstocat with a path that looks like `jnewland@gold1-ext.rs.github.com:jnewland.github.com.tgz`
 
 ## Setup
