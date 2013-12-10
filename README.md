@@ -7,8 +7,8 @@ This README assumes the following:
 * You're on a Mac ([running Windows?](#running-windows))
 * You've setup your machine with github/setup-puppet / Boxen.
 * Your GitHub repos are under `~/github` as a result of using Boxen.
-* You've setup [SSH access to production](https://cerebro.githubapp.com/articles/production-shell-access) by generating a GitHub specific key and [creating a new issue](https://github.com/github/vpn/issues/new) with cc @github/ops..
-* You've received an email back from a fine Opstocat with a path that looks like `jnewland@gold1-ext.rs.github.com:jnewland.github.com.tgz`
+* You've opened an issue on [github/ops](https://github.com/github/ops), cc'ing @github/security-ops detailing what you need to access, and why. Someone will assist with getting you keys and the right level of access.
+* You've received an email back from a fine Opstocat with a path that looks like `jnewland@gold1-ext.rs.github.com:jnewland.github.com.tgz`, or some other information to get your keys.
 
 ## Setup
 
@@ -97,3 +97,11 @@ on OpenVPN.net and get the latest Windows installer
 OpenVPN will only add one TAP device initially. You need one TAP for each 
 _concurrent_ VPN connection. If you need more there's a start menu entry 
 called "Add a new TAP virtual ethernet adapter".
+
+## For Ops.
+
+The certificates are generated on gold1. Check /etc/ssl/Makefile for more about it.
+
+For production access, people will need to be configured in hireadata/common.yaml . Check `github::staff::vpn` entry in [lb.pp](/github/puppet/blob/master/modules/github/manifests/role/lb.pp) for the current set.
+
+By default everyone receives enterprise vpn access.
