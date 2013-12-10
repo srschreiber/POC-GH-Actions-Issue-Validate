@@ -73,7 +73,7 @@ will help you as soon as they can!
 
 ## Running Windows?
 
-Good for you! Get to the 
+Good for you! Get to the
 [download page](http://openvpn.net/index.php/open-source/downloads.html)
 on OpenVPN.net and get the latest Windows installer
 (probably the 64bit version).
@@ -81,21 +81,21 @@ on OpenVPN.net and get the latest Windows installer
 ### Configure
 
  * Download the Viscosity configuration files you want from this repository.
- * Change their file extension to ```.ovpn``` and move them inside the 
-   OpenVPN config directory (\Program Files\OpenVPN\Config). 
+ * Change their file extension to ```.ovpn``` and move them inside the
+   OpenVPN config directory (\Program Files\OpenVPN\Config).
  * Unpack the tar.gz file you got from the ops team ([7-Zip](http://www.7-zip.org/))
    into the same directory.
- * Rename the three files to ca.crt, key.key and cert.crt (or change the 
+ * Rename the three files to ca.crt, key.key and cert.crt (or change the
    corresponding config options to point to their proper locations)
 
 ### Run
- * Start OpenVPN GUI **in administrator mode**. 
- * Right click on the OpenVPN icon in the tray and you should see either a connect 
+ * Start OpenVPN GUI **in administrator mode**.
+ * Right click on the OpenVPN icon in the tray and you should see either a connect
    menu entry (if you only installed one config) or submenus for each config.
 
 #### Out of TAP devices?
-OpenVPN will only add one TAP device initially. You need one TAP for each 
-_concurrent_ VPN connection. If you need more there's a start menu entry 
+OpenVPN will only add one TAP device initially. You need one TAP for each
+_concurrent_ VPN connection. If you need more there's a start menu entry
 called "Add a new TAP virtual ethernet adapter".
 
 ## For Ops.
