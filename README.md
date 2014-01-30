@@ -12,12 +12,11 @@ This README assumes the following:
 
 ## Setup
 
-* Clone this repo
+* Run Boxen
 
 ```
-cd ~/github
-git clone git@github.com:github/vpn
-cd vpn
+boxen vpn
+cd ~/github/vpn
 ```
 
 * Download your keys and extract them into the checkout:
