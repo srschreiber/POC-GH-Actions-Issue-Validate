@@ -72,23 +72,27 @@ will help you as soon as they can!
 
 ## Running Windows?
 
-Good for you! Get to the
-[download page](http://openvpn.net/index.php/open-source/downloads.html)
-on OpenVPN.net and get the latest Windows installer
-(probably the 64bit version).
+Bless your heart! You're going to need to download and install a few things:
+
+* [OpenVPN](http://openvpn.net/index.php/open-source/downloads.html), grabbing the latest Windows installer (64bit if you  run 64bit Windows) 
+* [WinSCP](http://winscp.net), for downloading your keys
+* [7-Zip](http://www.7-zip.org/), for extracting
 
 ### Configure
 
- * Download the Viscosity configuration files you want from this repository.
- * Change their file extension to ```.ovpn``` and move them inside the
-   OpenVPN config directory (\Program Files\OpenVPN\Config).
- * Unpack the tar.gz file you got from the ops team ([7-Zip](http://www.7-zip.org/))
-   into the same directory.
- * Rename the three files to ca.crt, key.key and cert.crt (or change the
-   corresponding config options to point to their proper locations)
+ 
+ * Download the Viscosity configuration files you want from this repository, ie `production.visc/config.conf`
+ * Change their file extension to `.ovpn` and move them inside the
+   OpenVPN config directory (\Program Files\OpenVPN\Config), ie `C:\Program Files\OpenVPN\Config\production.ovpn`. PROTIP: You may need to configure windows to 'Show extensions of known files' to properly rename the file. If this was done correctly, its icon should change to resemble
+ * Use WinSCP to connect to `gold1-ext.rs.github.com` and download `yourusername.github.com.tar.gz`
+ * Use 7-Zip to open this file, and copy the 3 files from `yourusername.github.com.tar.gz` into the OpenVPN config directory
+ * Rename the three files:
+   * ca_crt to ca.crt
+   * yourusername.github.com_key to key.key
+   * yourusername.github.com_crt to cert.crt
 
 ### Run
- * Start OpenVPN GUI **in administrator mode**.
+ * Start OpenVPN GUI **in administrator mode** (ie right click the menu item, and select "Run as Administrator")
  * Right click on the OpenVPN icon in the tray and you should see either a connect
    menu entry (if you only installed one config) or submenus for each config.
 
