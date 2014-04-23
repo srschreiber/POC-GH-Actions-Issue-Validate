@@ -105,6 +105,6 @@ called "Add a new TAP virtual ethernet adapter".
 
 The certificates are generated on gold1. Check /etc/ssl/Makefile for more about it.
 
-For production access, people will need to be configured in hireadata/common.yaml . Check `github::staff::vpn` entry in [lb.pp](/github/puppet/blob/master/modules/github/manifests/role/lb.pp) for the current set.
+For production access, people will need to be configured in hireadata/common.yaml . Check `github::staff::vpn` entry in [lb.pp](https://github.com/github/puppet/blob/master/modules/github/manifests/role/lb.pp) for the current set.
 
 By default everyone receives enterprise vpn access.
