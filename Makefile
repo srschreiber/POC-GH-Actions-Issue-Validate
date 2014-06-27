@@ -1,19 +1,27 @@
 .PHONY: viscosity
 
-viscosity: ca_crt
-	@cp ca_crt production.visc/ca.crt
-	@cp ca_crt enterprise.visc/ca.crt
-	@cp ca_crt office.visc/ca.crt
-	@cp *.github.com_crt production.visc/cert.crt
-	@cp *.github.com_crt enterprise.visc/cert.crt
-	@cp *.github.com_crt office.visc/cert.crt
-	@cp *.github.com_key production.visc/key.key
-	@cp *.github.com_key enterprise.visc/key.key
-	@cp *.github.com_key office.visc/key.key
-	@chmod 600 *.visc/*.{key,crt}
+viscosity: production office enterprise
 	@open production.visc
 	@open enterprise.visc
 	@open office.visc
+
+production: ca_crt
+	@cp ca_crt production.visc/ca.crt
+	@cp *.github.com_crt production.visc/cert.crt
+	@cp *.github.com_key production.visc/key.key
+	@chmod 600 *.visc/*.{key,crt}
+
+office: ca_crt
+	@cp ca_crt office.visc/ca.crt
+	@cp *.github.com_crt office.visc/cert.crt
+	@cp *.github.com_key office.visc/key.key
+	@chmod 600 *.visc/*.{key,crt}
+
+enterprise: ca_crt
+	@cp ca_crt enterprise.visc/ca.crt
+	@cp *.github.com_crt enterprise.visc/cert.crt
+	@cp *.github.com_key enterprise.visc/key.key
+	@chmod 600 *.visc/*.{key,crt}
 
 clean:
 	@rm -rf ~/Library/Application\ Support/Viscosity/OpenVPN/*
