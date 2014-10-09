@@ -22,7 +22,7 @@ cd ~/github/vpn
 * Download your keys and extract them into the checkout:
 
 ```
-scp $USER@gold1-ext.rs.github.com:$USER.github.com.tgz .
+ssh -A -t $USER@remote.github.net "ssh gold1 base64 $USER.github.com.tgz" | base64 -D > $USER.tgz
 tar xzvf $USER.github.com.tgz
 make viscosity
 ```
@@ -74,13 +74,13 @@ will help you as soon as they can!
 
 Bless your heart! You're going to need to download and install a few things:
 
-* [OpenVPN](http://openvpn.net/index.php/open-source/downloads.html), grabbing the latest Windows installer (64bit if you  run 64bit Windows) 
+* [OpenVPN](http://openvpn.net/index.php/open-source/downloads.html), grabbing the latest Windows installer (64bit if you  run 64bit Windows)
 * [WinSCP](http://winscp.net), for downloading your keys
 * [7-Zip](http://www.7-zip.org/), for extracting
 
 ### Configure
 
- 
+
  * Download the Viscosity configuration files you want from this repository, ie `production.visc/config.conf`
  * Change their file extension to `.ovpn` and move them inside the
    OpenVPN config directory (\Program Files\OpenVPN\Config), ie `C:\Program Files\OpenVPN\Config\production.ovpn`. PROTIP: You may need to configure windows to 'Show extensions of known files' to properly rename the file. If this was done correctly, its icon should change to resemble
