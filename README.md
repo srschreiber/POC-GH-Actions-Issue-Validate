@@ -1,6 +1,8 @@
 # GitHub VPN
 
-Access all of the things. Securely.
+## Access all of the things. Securely.
+
+#### Having trouble accessing the VPN? Remove your current Viscosity and config and use the instructions below. It's super easy and it is likely get your config fixed on all of the things, instantly.
 
 This README assumes the following:
 
