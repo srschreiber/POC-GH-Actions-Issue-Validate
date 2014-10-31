@@ -25,7 +25,7 @@ cd ~/github/vpn
 
 ```
 ssh -A -t $USER@remote.github.net "ssh gold1 base64 $USER.github.com.tgz" | base64 -D > $USER.tgz
-tar xzvf $USER.github.com.tgz
+tar xzvf $USER.tgz
 make viscosity
 ```
 
