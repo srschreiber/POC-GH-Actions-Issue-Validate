@@ -2,7 +2,15 @@
 
 ## Access all of the things. Securely.
 
-#### Having trouble accessing the VPN? Remove your current Viscosity and config and use the instructions below. It's super easy and it is likely get your config fixed on all of the things, instantly.
+#### Having trouble accessing the VPN?
+
+Try this:
+
+    cd ~/github/vpn
+    git pull origin master
+    make viscosity
+
+## Setup
 
 This README assumes the following:
 
@@ -12,7 +20,6 @@ This README assumes the following:
 * You've opened an issue on [github/ops](https://github.com/github/ops), cc'ing @github/security-ops detailing what you need to access, and why. Someone will assist with getting you keys and the right level of access.
 * You've received an email back from a fine Opstocat with a path that looks like `jnewland@gold1-ext.rs.github.com:jnewland.github.com.tgz`, or some other information to get your keys.
 
-## Setup
 
 * Run Boxen
 
