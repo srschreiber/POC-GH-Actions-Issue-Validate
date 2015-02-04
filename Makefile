@@ -1,6 +1,22 @@
-.PHONY: viscosity
+.PHONY: viscosity preflight
 
-viscosity: production office enterprise
+preflight:
+	@echo "Verifying that viscosity is installed, running boxen otherwise..."
+	@test -d /Applications/Viscosity.app || boxen vpn
+	@echo "Verifying that Viscosity is functional, blowing away and reinstalling otherwise..."
+	@open /Applications/Viscosity.app || ( \
+		rm -rf /Applications/Viscosity.app && \
+		sudo rm -f /var/db/.puppet_appdmg_installed_Viscosity && \
+		boxen vpn; \
+		exit 0; \
+	)
+	@open /Applications/Viscosity.app || ( \
+		echo "Viscosity still isn't functional after re-installing. Please file an issue: https://github.com/github/vpn/issues/new" && \
+		exit 1; \
+	)
+	@echo "All clear, setting up connections..."
+
+viscosity: preflight production office enterprise
 	@open production.visc
 	@open enterprise.visc
 	@open office.visc
