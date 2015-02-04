@@ -10,6 +10,10 @@ preflight:
 		boxen vpn; \
 		exit 0; \
 	)
+	@open /Applications/Viscosity.app || ( \
+		echo "Viscosity still isn't functional after re-installing. Please file an issue: https://github.com/github/vpn/issues/new" && \
+		exit 1; \
+	)
 	@echo "All clear, setting up connections..."
 
 viscosity: preflight production office enterprise
