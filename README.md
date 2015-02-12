@@ -6,6 +6,7 @@
 
 Try this:
 
+    Run `/vpn me` in Chat
     cd ~/github/vpn
     git pull origin master
     make viscosity
@@ -17,8 +18,7 @@ This README assumes the following:
 * You're on a Mac ([running Windows?](#running-windows))
 * You've setup your machine with github/setup-puppet / Boxen.
 * Your GitHub repos are under `~/github` as a result of using Boxen.
-* You've opened an issue on [github/ops](https://github.com/github/ops), cc'ing @github/security-ops detailing what you need to access, and why. Someone will assist with getting you keys and the right level of access.
-* You've received an email back from a fine Opstocat with a path that looks like `jnewland@gold1-ext.rs.github.com:jnewland.github.com.tgz`, or some other information to get your keys.
+* You've opened an issue on [github/ops](https://github.com/github/ops), cc'ing @github/security-ops detailing what you need to access, and why, and you've been added to the VPN users.
 
 
 * Run Boxen
@@ -28,21 +28,17 @@ boxen vpn
 cd ~/github/vpn
 ```
 
-* Download your keys and extract them into the checkout:
+* Setup the VPN connection
 
 ```
-ssh -A -t $USER@remote.github.net "ssh gold1 base64 $USER.github.com.tgz" | base64 -D > $USER.tgz
-tar xzvf $USER.tgz
 make viscosity
 ```
-
-* If you are upgrading from an older install, just copy the `~/github/vpn/KEYS` directory over and run `make viscosity`.
 
 * Look for a new icon that looks like a globe in your menu bar. This is Viscosity. Click it, and try connecting to each of the VPNs listed.
 
 * Test that the connections are working using these links:
 
-  * [Production](http://aux1.rs.github.com:9292/)
+  * [Production](http://mirror.iad.github.net/)
 
 * Register your copy of Viscosity with this info:
 
@@ -64,6 +60,7 @@ by hand.
 
 If you want to blow away your current config and setup things from scratch:
 
+    `/vpn me` in Chat
     killall Viscosity
     sudo killall openvpn
     make clean
@@ -83,18 +80,17 @@ will help you as soon as they can!
 
 Bless your heart! You're going to need to download and install a few things:
 
-* [OpenVPN](http://openvpn.net/index.php/open-source/downloads.html), grabbing the latest Windows installer (64bit if you  run 64bit Windows)
+* [OpenVPN](http://openvpn.net/index.php/open-source/downloads.html), grabbing the latest Windows installer (64bit if you run 64bit Windows)
 * [WinSCP](http://winscp.net), for downloading your keys
-* [7-Zip](http://www.7-zip.org/), for extracting
 
 ### Configure
-
 
  * Download the Viscosity configuration files you want from this repository, ie `production.visc/config.conf`
  * Change their file extension to `.ovpn` and move them inside the
    OpenVPN config directory (\Program Files\OpenVPN\Config), ie `C:\Program Files\OpenVPN\Config\production.ovpn`. PROTIP: You may need to configure windows to 'Show extensions of known files' to properly rename the file. If this was done correctly, its icon should change to resemble
- * Use WinSCP to connect to `gold1-ext.rs.github.com` and download `yourusername.github.com.tar.gz`
- * Use 7-Zip to open this file, and copy the 3 files from `yourusername.github.com.tar.gz` into the OpenVPN config directory
+ * Run `/vpn me` in Chat
+ * Use WinSCP to connect to `remote.github.com` and download `yourusername.github.com.*` into the OpenVPN config directory
+ * Download the CA certificate from [github/puppet](https://github.com/github/puppet/blob/7475edc21fec64ff82f33c2e8f30d1873d676a23/modules/github/files/etc/ssl/ca_crt) into the same folder
  * Rename the three files:
    * ca_crt to ca.crt
    * yourusername.github.com_key to key.key
@@ -112,8 +108,8 @@ called "Add a new TAP virtual ethernet adapter".
 
 ## For Ops.
 
-The certificates are generated on gold1. Check /etc/ssl/Makefile for more about it.
+The certificates are generated on ops-vpn1. Check /usr/local/sbin/generate-cert for more about it.
 
-For production access, people will need to be configured in hireadata/common.yaml . Check `github::staff::vpn` entry in [lb.pp](https://github.com/github/puppet/blob/master/modules/github/manifests/role/lb.pp) for the current set.
+For production access, people will need to be configured in `hieradata/common.yaml` . Check `github::staff::vpn` entry in [lb.pp](https://github.com/github/puppet/blob/master/modules/github/manifests/role/lb.pp) for the current set.
 
 By default everyone receives enterprise vpn access.
