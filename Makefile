@@ -21,11 +21,9 @@ viscosity: preflight production office enterprise
 	@open enterprise.visc
 	@open office.visc
 
-production: ca_crt
-	@cp ca_crt production.visc/ca.crt
-	@cp *.github.com_crt production.visc/cert.crt
-	@cp *.github.com_key production.visc/key.key
-	@chmod 600 *.visc/*.{key,crt}
+production: p12
+	@cp -f pkcs.p12 production.visc/pkcs.p12
+	@chmod 600 *.visc/*.p12
 
 office: ca_crt
 	@cp ca_crt office.visc/ca.crt
@@ -43,5 +41,10 @@ clean:
 	@rm -rf ~/Library/Application\ Support/Viscosity/OpenVPN/*
 	@rm *.visc/*.{key,crt} || true
 
+p12:
+	@scp remote.github.com:$$USER.p12 pkcs.p12
+
 ca_crt:
-	@ssh remote.github.com -- "tar czf - --remove-files -C /home/$$USER ca_crt $$USER.github.com_{crt,key}" | tar xzf - -C .
+	@test -f KEYS/ca.crt && cp KEYS/ca.crt ca_crt
+	@test -f KEYS/my.crt && cp KEYS/my.crt $$USER.github.com_crt
+	@test -f KEYS/my.key && cp KEYS/my.key $$USER.github.com_key
