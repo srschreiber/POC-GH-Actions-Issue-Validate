@@ -16,10 +16,8 @@ preflight:
 	)
 	@echo "All clear, setting up connections..."
 
-viscosity: preflight production office enterprise
+viscosity: preflight production
 	@open production.visc
-	@open enterprise.visc
-	@open office.visc
 
 production: p12
 	@cp -f pkcs.p12 production.visc/pkcs.p12
