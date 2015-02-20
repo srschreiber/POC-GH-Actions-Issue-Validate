@@ -16,7 +16,7 @@ preflight:
 	)
 	@echo "All clear, setting up connections..."
 
-viscosity: preflight production
+viscosity: preflight production enterprise
 	@open production.visc
 
 production: p12
@@ -30,10 +30,8 @@ office: ca_crt
 	@chmod 600 *.visc/*.{key,crt}
 
 enterprise: ca_crt
-	@cp ca_crt enterprise.visc/ca.crt
-	@cp *.github.com_crt enterprise.visc/cert.crt
-	@cp *.github.com_key enterprise.visc/key.key
-	@chmod 600 *.visc/*.{key,crt}
+	@cp -f pkcs.p12 production.visc/pkcs.p12
+	@chmod 600 *.visc/*.p12
 
 clean:
 	@rm -rf ~/Library/Application\ Support/Viscosity/OpenVPN/*
