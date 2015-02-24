@@ -18,6 +18,7 @@ preflight:
 
 viscosity: preflight production enterprise
 	@open production.visc
+	@open enterprise.visc
 
 production: p12
 	@cp -f pkcs.p12 production.visc/pkcs.p12
@@ -29,8 +30,8 @@ office: ca_crt
 	@cp *.github.com_key office.visc/key.key
 	@chmod 600 *.visc/*.{key,crt}
 
-enterprise: ca_crt
-	@cp -f pkcs.p12 production.visc/pkcs.p12
+enterprise: p12
+	@cp -f pkcs.p12 enterprise.visc/pkcs.p12
 	@chmod 600 *.visc/*.p12
 
 clean:
