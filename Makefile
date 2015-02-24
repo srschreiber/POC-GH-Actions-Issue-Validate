@@ -14,34 +14,35 @@ preflight:
 		echo "Viscosity still isn't functional after re-installing. Please file an issue: https://github.com/github/vpn/issues/new" && \
 		exit 1; \
 	)
-	@echo "All clear, setting up connections..."
+	@echo "All clear, shutting down viscocity and importing connections..."
+	@killall Viscosity
 
-viscosity: preflight production enterprise
+finalize:
+	@open /Applications/Viscosity.app
+
+viscosity: preflight production enterprise finalize
 	@open production.visc
 	@open enterprise.visc
 
 production: p12
+	#@osascript -e 'tell application "Viscosity" to disconnect "production"'
+	for c in ~/Library/Application\ Support/Viscosity/OpenVPN/* ; do \
+	  test -d "$$c" && grep -q "name production$$" "$$c/config.conf" && rm -rf "$$c" || true ; \
+	done
 	@cp -f pkcs.p12 production.visc/pkcs.p12
 	@chmod 600 *.visc/*.p12
 
-office: ca_crt
-	@cp ca_crt office.visc/ca.crt
-	@cp *.github.com_crt office.visc/cert.crt
-	@cp *.github.com_key office.visc/key.key
-	@chmod 600 *.visc/*.{key,crt}
-
 enterprise: p12
+	#@osascript -e 'tell application "Viscosity" to disconnect "enterprise"'
+	for c in ~/Library/Application\ Support/Viscosity/OpenVPN/* ; do \
+	  test -d "$$c" && grep -q "name enterprise$$" "$$c/config.conf" && rm -rf "$$c" || true ; \
+	done
 	@cp -f pkcs.p12 enterprise.visc/pkcs.p12
 	@chmod 600 *.visc/*.p12
 
 clean:
 	@rm -rf ~/Library/Application\ Support/Viscosity/OpenVPN/*
-	@rm *.visc/*.{key,crt} || true
+	@rm *.visc/*.{key,crt,p12} || true
 
 p12:
 	@scp remote.github.com:$$USER.p12 pkcs.p12
-
-ca_crt:
-	@test -f KEYS/ca.crt && cp KEYS/ca.crt ca_crt
-	@test -f KEYS/my.crt && cp KEYS/my.crt $$USER.github.com_crt
-	@test -f KEYS/my.key && cp KEYS/my.key $$USER.github.com_key
