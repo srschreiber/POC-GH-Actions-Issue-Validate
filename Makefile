@@ -1,6 +1,6 @@
 .PHONY: viscosity preflight
 
-USERNAME=`git config --get github.username`
+USERNAME=`git config --get github.username || echo $$USER`
 
 preflight:
 	@echo "Verifying that viscosity is installed, running boxen otherwise..."
