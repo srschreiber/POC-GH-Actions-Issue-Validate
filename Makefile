@@ -1,5 +1,7 @@
 .PHONY: viscosity preflight
 
+USERNAME=`git config --get github.username`
+
 preflight:
 	@echo "Verifying that viscosity is installed, running boxen otherwise..."
 	@test -d /Applications/Viscosity.app || boxen vpn
@@ -45,4 +47,4 @@ clean:
 	@rm *.visc/*.{key,crt,p12} || true
 
 p12:
-	@scp remote.github.com:$$USER.p12 pkcs.p12
+	@scp remote.github.com:$(USERNAME).p12 pkcs.p12
