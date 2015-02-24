@@ -4,4 +4,5 @@ ca_crt
 *.tgz
 *.key
 *.crt
+*p12
 KEYS
