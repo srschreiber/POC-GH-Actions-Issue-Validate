@@ -40,9 +40,11 @@ $(connections): pkcs.p12
 	@osascript -e 'tell application "Viscosity" to connect "$@"'
 
 clean:
+	@echo "Removing downloaded credentials..."
 	@rm -f pkcs.p12 *.visc/pkcs.p12
 
 uninstall: clean
+	@echo "Disconnecting sessions, removing connections, and stopping Viscosity..."
 	@osascript -e 'tell application "Viscosity" to disconnectall' && sleep 3
 	@rm -rf ~/Library/Application\ Support/Viscosity/OpenVPN/*
 	@killall Viscosity
