@@ -3,7 +3,9 @@ connections = $(profiles:.visc=)
 
 .PHONY: viscosity preflight import $(connections)
 
-viscosity: preflight import purge
+install: viscosity
+
+viscosity: preflight import clean
 
 preflight:
 	@echo "Verifying that viscosity is installed, running boxen otherwise..."
@@ -46,9 +48,12 @@ purge: pkcs.p12
 	@rm -f *.visc/pkcs.p12
 
 clean:
-	@osascript -e 'tell application "Viscosity" to disconnectall'
+	@rm -f pkcs.p12 *.visc/pkcs.p12
+
+uninstall: clean
+	@osascript -e 'tell application "Viscosity" to disconnectall' && sleep 3
 	@rm -rf ~/Library/Application\ Support/Viscosity/OpenVPN/*
-	@rm *.visc/*.{key,crt,p12} || true
+	@killall Viscosity
 
 pkcs.p12:
 	@echo "--------------------------------------------------------------------------------------------------"
