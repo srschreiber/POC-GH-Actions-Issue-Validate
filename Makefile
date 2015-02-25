@@ -27,7 +27,7 @@ import: $(connections)
 
 $(connections): pkcs.p12
 	@cp -f pkcs.p12 $@.visc/pkcs.p12
-	@if grep -q -m1 -e 'name $@$$' ~/Library/Application\ Support/Viscosity/OpenVPN/*/config.conf ; then \
+	@if grep -q -m1 -e 'name $@$$' ~/Library/Application\ Support/Viscosity/OpenVPN/*/config.conf 2>/dev/null ; then \
 		p=$$(dirname "$$(grep -l -m1 -e 'name $@$$' ~/Library/Application\ Support/Viscosity/OpenVPN/*/config.conf)") ; \
 		echo "Updating connection profile for $@..." ; \
 		osascript -e 'tell application "Viscosity" to disconnect "$@"' && sleep 3 ; \
