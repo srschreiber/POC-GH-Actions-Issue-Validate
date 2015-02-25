@@ -42,11 +42,6 @@ $(connections): pkcs.p12
 	done
 	@osascript -e 'tell application "Viscosity" to connect "$@"'
 
-purge: pkcs.p12
-	@echo "Backing up credentials to pkcs-backup.p12..."
-	@mv -f pkcs.p12 pkcs-backup.p12
-	@rm -f *.visc/pkcs.p12
-
 clean:
 	@rm -f pkcs.p12 *.visc/pkcs.p12
 
