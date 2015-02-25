@@ -16,7 +16,7 @@ Try this:
 This README assumes the following:
 
 * You're on a Mac ([running Windows?](#running-windows))
-* You've setup your machine with github/setup-puppet / Boxen.
+* You've setup your machine with Boxen.
 * Your GitHub repos are under `~/github` as a result of using Boxen.
 * You've opened an issue on [github/ops](https://github.com/github/ops), cc'ing @github/security-ops detailing what you need to access, and why, and you've been added to the VPN users.
 
@@ -28,13 +28,13 @@ boxen vpn
 cd ~/github/vpn
 ```
 
-* Setup the VPN connection
+* Setup the VPN connections
 
 ```
-make viscosity
+make
 ```
 
-* Look for a new icon that looks like a globe in your menu bar. This is Viscosity. Click it, and try connecting to each of the VPNs listed.
+* Look for a new icon that looks like a globe in your menu bar. This is Viscosity. Click it, and verify each of the VPNs listed have connected.
 
 * Test that the connections are working using these links:
 
@@ -61,10 +61,8 @@ by hand.
 If you want to blow away your current config and setup things from scratch:
 
     `/vpn me` in Chat
-    killall Viscosity
-    sudo killall openvpn
-    make clean
-    make viscosity
+    make uninstall
+    make
 
 ## Problem?
 
@@ -74,7 +72,7 @@ will help you as soon as they can!
 
 ## Uninstall
 
-    make clean
+    make uninstall
 
 ## Running Windows?
 
@@ -85,16 +83,13 @@ Bless your heart! You're going to need to download and install a few things:
 
 ### Configure
 
- * Download the Viscosity configuration files you want from this repository, ie `production.visc/config.conf`
+ * Download the Viscosity configuration files you want from this repository, ie `github-production.visc/config.conf`
  * Change their file extension to `.ovpn` and move them inside the
-   OpenVPN config directory (\Program Files\OpenVPN\Config), ie `C:\Program Files\OpenVPN\Config\production.ovpn`. PROTIP: You may need to configure windows to 'Show extensions of known files' to properly rename the file. If this was done correctly, its icon should change to resemble
+   OpenVPN config directory (\Program Files\OpenVPN\Config), ie `C:\Program Files\OpenVPN\Config\github-production.ovpn`. PROTIP: You may need to configure windows to 'Show extensions of known files' to properly rename the file. If this was done correctly, its icon should change to resemble
  * Run `/vpn me` in Chat
- * Use WinSCP to connect to `remote.github.com` and download `yourusername.github.com.*` into the OpenVPN config directory
+ * Use WinSCP to connect to `remote.github.com` and download `vpn-credentials.p12` into the OpenVPN config directory
  * Download the CA certificate from [github/puppet](https://github.com/github/puppet/blob/7475edc21fec64ff82f33c2e8f30d1873d676a23/modules/github/files/etc/ssl/ca_crt) into the same folder
- * Rename the three files:
-   * ca_crt to ca.crt
-   * yourusername.github.com_key to key.key
-   * yourusername.github.com_crt to cert.crt
+ * Rename the PKCS#12 container from `vpn-credentials.p12` to `pkcs.p12`
 
 ### Run
  * Start OpenVPN GUI **in administrator mode** (ie right click the menu item, and select "Run as Administrator")
@@ -108,7 +103,7 @@ called "Add a new TAP virtual ethernet adapter".
 
 ## For Ops.
 
-The certificates are generated on ops-vpn1. Check /usr/local/sbin/generate-cert for more about it.
+The certificates are generated on ops-vpn1. Check `/data/vpn-ca` and the [github/vpn-ca](https://github.com/github/vpn-ca) repo for more info about the CA store.
 
 For production access, people will need to be configured in `hieradata/common.yaml` . Check `github::staff::vpn` entry in [lb.pp](https://github.com/github/puppet/blob/master/modules/github/manifests/role/lb.pp) for the current set.
 

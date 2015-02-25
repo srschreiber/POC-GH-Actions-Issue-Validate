@@ -1,6 +1,11 @@
-.PHONY: viscosity preflight
+profiles = $(wildcard *.visc)
+connections = $(profiles:.visc=)
 
-USERNAME=`git config --get github.username || echo $$USER`
+.PHONY: viscosity preflight import $(connections)
+
+install: viscosity
+
+viscosity: preflight import clean
 
 preflight:
 	@echo "Verifying that viscosity is installed, running boxen otherwise..."
@@ -16,35 +21,38 @@ preflight:
 		echo "Viscosity still isn't functional after re-installing. Please file an issue: https://github.com/github/vpn/issues/new" && \
 		exit 1; \
 	)
-	@echo "All clear, shutting down viscocity and importing connections..."
-	@killall Viscosity
+	@echo "Importing connections...\n"
 
-finalize:
-	@open /Applications/Viscosity.app
+import: $(connections)
 
-viscosity: preflight production enterprise finalize
-	@open production.visc
-	@open enterprise.visc
-
-production: p12
-	#@osascript -e 'tell application "Viscosity" to disconnect "production"'
-	for c in ~/Library/Application\ Support/Viscosity/OpenVPN/* ; do \
-	  test -d "$$c" && grep -q "name production$$" "$$c/config.conf" && rm -rf "$$c" || true ; \
-	done
-	@cp -f pkcs.p12 production.visc/pkcs.p12
-	@chmod 600 *.visc/*.p12
-
-enterprise: p12
-	#@osascript -e 'tell application "Viscosity" to disconnect "enterprise"'
-	for c in ~/Library/Application\ Support/Viscosity/OpenVPN/* ; do \
-	  test -d "$$c" && grep -q "name enterprise$$" "$$c/config.conf" && rm -rf "$$c" || true ; \
-	done
-	@cp -f pkcs.p12 enterprise.visc/pkcs.p12
-	@chmod 600 *.visc/*.p12
+$(connections): pkcs.p12
+	@cp -f pkcs.p12 $@.visc/pkcs.p12
+	@if grep -q -m1 -e 'name $@$$' ~/Library/Application\ Support/Viscosity/OpenVPN/*/config.conf 2>/dev/null ; then \
+		p=$$(dirname "$$(grep -l -m1 -e 'name $@$$' ~/Library/Application\ Support/Viscosity/OpenVPN/*/config.conf)") ; \
+		echo "Updating connection profile for $@..." ; \
+		osascript -e 'tell application "Viscosity" to disconnect "$@"' && sleep 3 ; \
+		cp -f $@.visc/config.conf "$$p"/config.conf ; \
+		cp -f $@.visc/pkcs.p12 "$$p"/pkcs.p12 ; \
+	else \
+		echo "Importing new connection profile for $@..." ; \
+		open $@.visc ; \
+	fi
+	@osascript -e 'tell application "Viscosity" to connect "$@"'
 
 clean:
-	@rm -rf ~/Library/Application\ Support/Viscosity/OpenVPN/*
-	@rm *.visc/*.{key,crt,p12} || true
+	@echo "Removing downloaded credentials..."
+	@rm -f pkcs.p12 *.visc/pkcs.p12
 
-p12:
-	@scp remote.github.com:$(USERNAME).p12 pkcs.p12
+uninstall: clean
+	@echo "Disconnecting sessions, removing connections, and stopping Viscosity..."
+	@osascript -e 'tell application "Viscosity" to disconnectall' && sleep 3
+	@rm -rf ~/Library/Application\ Support/Viscosity/OpenVPN/*
+	@killall Viscosity
+
+pkcs.p12:
+	@echo "--------------------------------------------------------------------------------------------------"
+	@echo "Fetching VPN credentials from remote.github.com. If this fails, please verify you have an account "
+	@echo "and a valid SSH configuration by running \`ssh remote.github.com whoami\`"
+	@echo "--------------------------------------------------------------------------------------------------\n"
+	@scp remote.github.com:vpn-credentials.p12 pkcs.p12
+	@echo ""
