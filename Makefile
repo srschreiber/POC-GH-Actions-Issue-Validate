@@ -47,4 +47,4 @@ clean:
 	@rm *.visc/*.{key,crt,p12} || true
 
 p12:
-	@scp remote.github.com:$(USERNAME).p12 pkcs.p12
+	@scp remote.github.com:vpn-credentials.p12 pkcs.p12
