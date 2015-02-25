@@ -26,20 +26,17 @@ preflight:
 import: $(connections)
 
 $(connections): pkcs.p12
-	@osascript -e 'tell application "Viscosity" to disconnect "$@"' && sleep 3
 	@cp -f pkcs.p12 $@.visc/pkcs.p12
-	@for c in ~/Library/Application\ Support/Viscosity/OpenVPN/* ; do \
-		if test -d "$$c" ; then \
-			if grep -q -e "name $@$$" "$$c/config.conf" ; then \
-				echo "Updating connection profile for $@..." ; \
-				cp -f $@.visc/config.conf "$$c"/config.conf ; \
-				cp -f $@.visc/pkcs.p12 "$$c"/pkcs.p12 ; \
-			fi ; \
-		else \
-			echo "Importing new connection profile for $$c..." ; \
-			open $@.visc ; \
-		fi ; \
-	done
+	@if grep -q -m1 -e 'name $@$$' ~/Library/Application\ Support/Viscosity/OpenVPN/*/config.conf ; then \
+		p=$$(dirname "$$(grep -l -m1 -e 'name $@$$' ~/Library/Application\ Support/Viscosity/OpenVPN/*/config.conf)") ; \
+		echo "Updating connection profile for $@..." ; \
+		osascript -e 'tell application "Viscosity" to disconnect "$@"' && sleep 3 ; \
+		cp -f $@.visc/config.conf "$$p"/config.conf ; \
+		cp -f $@.visc/pkcs.p12 "$$p"/pkcs.p12 ; \
+	else \
+		echo "Importing new connection profile for $@..." ; \
+		open $@.visc ; \
+	fi
 	@osascript -e 'tell application "Viscosity" to connect "$@"'
 
 clean:
