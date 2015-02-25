@@ -1,6 +1,9 @@
-.PHONY: viscosity preflight
+profiles = $(wildcard *.visc)
+connections = $(profiles:.visc=)
 
-USERNAME=`git config --get github.username || echo $$USER`
+.PHONY: viscosity preflight import $(connections)
+
+viscosity: preflight import purge
 
 preflight:
 	@echo "Verifying that viscosity is installed, running boxen otherwise..."
@@ -16,35 +19,41 @@ preflight:
 		echo "Viscosity still isn't functional after re-installing. Please file an issue: https://github.com/github/vpn/issues/new" && \
 		exit 1; \
 	)
-	@echo "All clear, shutting down viscocity and importing connections..."
-	@killall Viscosity
+	@echo "Importing connections...\n"
 
-finalize:
-	@open /Applications/Viscosity.app
+import: $(connections)
 
-viscosity: preflight production enterprise finalize
-	@open production.visc
-	@open enterprise.visc
-
-production: p12
-	#@osascript -e 'tell application "Viscosity" to disconnect "production"'
-	for c in ~/Library/Application\ Support/Viscosity/OpenVPN/* ; do \
-	  test -d "$$c" && grep -q "name production$$" "$$c/config.conf" && rm -rf "$$c" || true ; \
+$(connections): pkcs.p12
+	@osascript -e 'tell application "Viscosity" to disconnect "$@"' && sleep 3
+	@cp -f pkcs.p12 $@.visc/pkcs.p12
+	@for c in ~/Library/Application\ Support/Viscosity/OpenVPN/* ; do \
+		if test -d "$$c" ; then \
+			if grep -q -e "name $@$$" "$$c/config.conf" ; then \
+				echo "Updating connection profile for $@..." ; \
+				cp -f $@.visc/config.conf "$$c"/config.conf ; \
+				cp -f $@.visc/pkcs.p12 "$$c"/pkcs.p12 ; \
+			fi ; \
+		else \
+			echo "Importing new connection profile for $$c..." ; \
+			open $@.visc ; \
+		fi ; \
 	done
-	@cp -f pkcs.p12 production.visc/pkcs.p12
-	@chmod 600 *.visc/*.p12
+	@osascript -e 'tell application "Viscosity" to connect "$@"'
 
-enterprise: p12
-	#@osascript -e 'tell application "Viscosity" to disconnect "enterprise"'
-	for c in ~/Library/Application\ Support/Viscosity/OpenVPN/* ; do \
-	  test -d "$$c" && grep -q "name enterprise$$" "$$c/config.conf" && rm -rf "$$c" || true ; \
-	done
-	@cp -f pkcs.p12 enterprise.visc/pkcs.p12
-	@chmod 600 *.visc/*.p12
+purge: pkcs.p12
+	@echo "Backing up credentials to pkcs-backup.p12..."
+	@mv -f pkcs.p12 pkcs-backup.p12
+	@rm -f *.visc/pkcs.p12
 
 clean:
+	@osascript -e 'tell application "Viscosity" to disconnectall'
 	@rm -rf ~/Library/Application\ Support/Viscosity/OpenVPN/*
 	@rm *.visc/*.{key,crt,p12} || true
 
-p12:
+pkcs.p12:
+	@echo "--------------------------------------------------------------------------------------------------"
+	@echo "Fetching VPN credentials from remote.github.com. If this fails, please verify you have an account "
+	@echo "and a valid SSH configuration by running \`ssh remote.github.com whoami\`"
+	@echo "--------------------------------------------------------------------------------------------------\n"
 	@scp remote.github.com:vpn-credentials.p12 pkcs.p12
+	@echo ""
