@@ -1,4 +1,4 @@
-profiles = $(wildcard *.visc)
+profiles = $(shell git ls-files | grep '^.*\.visc\/' | xargs -n1 dirname)
 connections = $(profiles:.visc=)
 
 .PHONY: viscosity preflight import $(connections)
