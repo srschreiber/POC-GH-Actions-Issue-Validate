@@ -8,6 +8,8 @@ install: viscosity
 viscosity: preflight import clean
 
 preflight:
+	@echo "Verifying the local repo is up to date..."
+	@./script/up-to-date
 	@echo "Verifying that viscosity is installed, running boxen otherwise..."
 	@test -d /Applications/Viscosity.app || boxen vpn
 	@echo "Verifying that Viscosity is functional, blowing away and reinstalling otherwise..."
