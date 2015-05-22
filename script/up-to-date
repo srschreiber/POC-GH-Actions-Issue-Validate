@@ -1,8 +1,8 @@
 #!/bin/sh
 
 LOCAL=$(git rev-parse @)
-REMOTE=$(git rev-parse @{u})
-BASE=$(git merge-base @ @{u})
+REMOTE=$(git rev-parse @{u} 2>/dev/null || echo "none")
+BASE=$(git merge-base @ @{u} 2>/dev/null || echo "none")
 
 if [ $LOCAL = $REMOTE ]; then
   exit 0
