@@ -9,7 +9,7 @@ Try this:
     Run `/vpn me` in Chat
     cd ~/github/vpn
     git pull origin master
-    make viscosity
+    make -j1 viscosity
 
 ## Setup
 
@@ -31,7 +31,7 @@ cd ~/github/vpn
 * Setup the VPN connections
 
 ```
-make
+make -j1
 ```
 
 * Look for a new icon that looks like a globe in your menu bar. This is Viscosity. Click it, and verify each of the VPNs listed have connected.
@@ -61,8 +61,8 @@ by hand.
 If you want to blow away your current config and setup things from scratch:
 
     `/vpn me` in Chat
-    make uninstall
-    make
+    make -j1 uninstall
+    make -j1
 
 ## Problem?
 
@@ -72,7 +72,7 @@ will help you as soon as they can!
 
 ## Uninstall
 
-    make uninstall
+    make -j1 uninstall
 
 ## Running Windows?
 
