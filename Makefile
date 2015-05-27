@@ -5,7 +5,10 @@ connections = $(profiles:.visc=)
 
 install: viscosity
 
-viscosity: preflight import clean
+viscosity:
+	$(MAKE) -j1 safe-viscosity
+
+safe-viscosity: preflight import clean
 
 preflight:
 	@echo "Verifying the local repo is up to date..."
