@@ -6,7 +6,7 @@ connections = $(profiles:.visc=)
 install: viscosity
 
 viscosity:
-	$(MAKE) -j1 safe-viscosity
+	@$(MAKE) -j1 safe-viscosity
 
 safe-viscosity: preflight import clean
 
