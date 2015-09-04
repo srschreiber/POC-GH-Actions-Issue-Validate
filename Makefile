@@ -59,5 +59,8 @@ pkcs.p12:
 	@echo "Fetching VPN credentials from remote.github.com. If this fails, please verify you have an account "
 	@echo "and a valid SSH configuration by running \`ssh remote.github.com whoami\`"
 	@echo "--------------------------------------------------------------------------------------------------\n"
-	@scp remote.github.com:vpn-credentials.p12 pkcs.p12
+	@scp remote.github.com:vpn-credentials.p12 pkcs.p12 || ( \
+		echo "Unable to download VPN credentials. Have you run '/vpn me' in Chat?" && \
+		exit 1; \
+	)
 	@echo ""
