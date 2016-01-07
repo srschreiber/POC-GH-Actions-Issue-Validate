@@ -6,7 +6,7 @@
 
 Try this:
 
-    Run `/vpn me` in Chat
+    Run `hubot vpn me` in Chat
     cd ~/github/vpn
     git pull origin master
     make viscosity
@@ -60,7 +60,7 @@ by hand.
 
 If you want to blow away your current config and setup things from scratch:
 
-    `/vpn me` in Chat
+    `hubot vpn me` in Chat
     make uninstall
     make
 
@@ -86,7 +86,7 @@ Bless your heart! You're going to need to download and install a few things:
  * Download the Viscosity configuration files you want from this repository, ie `github-production.visc/config.conf`
  * Change their file extension to `.ovpn` and move them inside the
    OpenVPN config directory (\Program Files\OpenVPN\Config), ie `C:\Program Files\OpenVPN\Config\github-production.ovpn`. PROTIP: You may need to configure windows to 'Show extensions of known files' to properly rename the file. If this was done correctly, its icon should change to resemble
- * Run `/vpn me` in Chat
+ * Run `hubot vpn me` in Chat
  * Use WinSCP to connect to `remote.github.com` and download `vpn-credentials.p12` into the OpenVPN config directory
  * Download the CA certificate from [github/puppet](https://github.com/github/puppet/blob/7475edc21fec64ff82f33c2e8f30d1873d676a23/modules/github/files/etc/ssl/ca_crt) into the same folder
  * Rename the PKCS#12 container from `vpn-credentials.p12` to `pkcs.p12`
