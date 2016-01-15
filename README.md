@@ -40,7 +40,7 @@ make
 
   * [Production](http://mirror.iad.github.net/)
 
-* Register your copy of Viscosity with this info:
+* Click on the Viscosity menu bar icon and select Preferences. In the pop-up window, click About and then Register. Register your copy of Viscosity with this info:
 
 ```
 Name:  GitHub
