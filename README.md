@@ -16,21 +16,21 @@ Try this:
 This README assumes the following:
 
 * You're on a Mac ([running Windows?](#running-windows))
-* You've setup your machine with Boxen.
-* Your GitHub repos are under `~/github` as a result of using Boxen.
+* Your GitHub repos are under `~/github`.
 * You've opened an issue on [github/ops](https://github.com/github/ops), cc'ing @github/security-ops detailing what you need to access, and why, and you've been added to the VPN users.
 
 
-* Run Boxen
+* Clone the repository
 
 ```
-boxen vpn
-cd ~/github/vpn
+cd ~/github
+git clone https://github.com/github/vpn
 ```
 
 * Setup the VPN connections
 
 ```
+cd ~/github/vpn
 make
 ```
 
