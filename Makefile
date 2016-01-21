@@ -5,6 +5,7 @@ ifdef BOXEN_HOME
 	preflight = boxen-preflight
 else
 	preflight = cask-preflight
+	viscosity_path = $(shell brew cask list viscosity | tail -n1 | cut -d' ' -f1)
 endif
 
 .PHONY: viscosity up-to-date $(preflight) import $(connections)
@@ -40,12 +41,12 @@ cask-preflight:
 	@echo "Verifying that Viscosity is installed, running Homebrew otherwise..."
 	@brew bundle check >/dev/null || brew bundle
 	@echo "Verifying that Viscosity is functional, reinstalling otherwise..."
-	@open /opt/homebrew-cask/Caskroom/viscosity/latest/Viscosity.app/ || ( \
-		rm -rf /opt/homebrew-cask/Caskroom/viscosity/latest/Viscosity.app/ && \
+	@open $(viscosity_path)/Viscosity.app/ || ( \
+		brew cask uninstall --force viscosity && \
 		brew bundle; \
 		exit 0; \
 	)
-	@open /opt/homebrew-cask/Caskroom/viscosity/latest/Viscosity.app/ || ( \
+	@open $(viscosity_path)/Viscosity.app/ || ( \
 		echo "Viscosity still isn't functional after re-installing. Please file an issue:" \
 		echo "  https://github.com/github/vpn/issues/new" && \
 		exit 1; \
