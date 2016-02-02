@@ -39,6 +39,7 @@ boxen-preflight:
 
 cask-preflight:
 	@echo "Verifying that Viscosity is installed, running Homebrew otherwise..."
+	@brew uninstall --force brew-cask
 	@brew bundle check >/dev/null || brew bundle
 	@echo "Verifying that Viscosity is functional, reinstalling otherwise..."
 	@open $(viscosity_path)/Viscosity.app/ || ( \
