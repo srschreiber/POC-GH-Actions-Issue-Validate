@@ -36,7 +36,7 @@ boxen-preflight:
 		exit 1; \
 	)
 
-cask-preflight:
+cask-preflight-uninstall:
 	@echo "Verifying that Viscosity is installed, running Homebrew otherwise..."
 	@brew uninstall --force brew-cask
 	@brew bundle check >/dev/null || brew bundle
@@ -46,6 +46,8 @@ cask-preflight:
 		brew bundle; \
 		exit 0; \
 	)
+
+cask-preflight: cask-preflight-uninstall
 	@open "$(shell brew cask list viscosity | tail -n1 | cut -d' ' -f1)/Viscosity.app/" || ( \
 		echo "Viscosity still isn't functional after re-installing. Please file an issue:" \
 		echo "  https://github.com/github/vpn/issues/new" && \
