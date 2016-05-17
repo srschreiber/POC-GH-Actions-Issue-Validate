@@ -1,13 +1,7 @@
 profiles = $(shell git ls-files | grep '^.*\.visc\/' | xargs -n1 dirname)
 connections = $(profiles:.visc=)
 
-ifdef BOXEN_HOME
-	preflight = boxen-preflight
-else
-	preflight = cask-preflight
-endif
-
-.PHONY: viscosity up-to-date $(preflight) import $(connections)
+.PHONY: viscosity up-to-date preflight import $(connections)
 
 install: viscosity
 
@@ -20,23 +14,7 @@ up-to-date:
 	@echo "Verifying the local repo is up to date..."
 	@./script/up-to-date
 
-boxen-preflight:
-	@echo "Verifying that Viscosity is installed, running Boxen otherwise..."
-	@test -d /Applications/Viscosity.app || boxen vpn
-	@echo "Verifying that Viscosity is functional, reinstalling otherwise..."
-	@open /Applications/Viscosity.app || ( \
-		rm -rf /Applications/Viscosity.app && \
-		sudo rm -f /var/db/.puppet_appdmg_installed_Viscosity && \
-		boxen vpn; \
-		exit 0; \
-	)
-	@open /Applications/Viscosity.app || ( \
-		echo "Viscosity still isn't functional after re-installing. Please file an issue:" \
-		echo "  https://github.com/github/vpn/issues/new" && \
-		exit 1; \
-	)
-
-cask-preflight-uninstall:
+preflight-uninstall:
 	@echo "Verifying that Viscosity is installed, running Homebrew otherwise..."
 	@brew uninstall --force brew-cask
 	@brew bundle check >/dev/null || brew bundle
@@ -47,7 +25,7 @@ cask-preflight-uninstall:
 		exit 0; \
 	)
 
-cask-preflight: cask-preflight-uninstall
+preflight: preflight-uninstall
 	@open "$(shell brew cask list viscosity | tail -n1 | cut -d' ' -f1)/Viscosity.app/" || ( \
 		echo "Viscosity still isn't functional after re-installing. Please file an issue:" \
 		echo "  https://github.com/github/vpn/issues/new" && \
