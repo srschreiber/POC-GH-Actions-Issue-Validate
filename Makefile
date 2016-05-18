@@ -8,7 +8,7 @@ install: viscosity
 viscosity:
 	@$(MAKE) -j1 safe-viscosity
 
-safe-viscosity: up-to-date $(preflight) import clean
+safe-viscosity: up-to-date preflight import clean
 
 up-to-date:
 	@echo "Verifying the local repo is up to date..."
