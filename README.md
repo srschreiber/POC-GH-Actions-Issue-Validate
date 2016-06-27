@@ -74,6 +74,13 @@ Someone from the Ops team will help you as soon as they can!
 
     make uninstall
 
+## Have access to stafftools? 
+
+Unless you are a supportocat, you are required to [use the VPN connection to access stafftools](https://github.com/devtools/features/require_restricted_front_end). Having stafftools exposed on the internet is [something we are actively looking to change](https://github.com/github/github/issues/38109). **note** this change will: 
+
+1. Require you to access stafftools via https://admin.github.com/stafftools. https://github.com/stafftools will redirect you to https://admin.github.com/stafftools.
+1. Require you to connect to the production VPN to access https://admin.github.com/stafftools
+
 ## Running Windows?
 
 Bless your heart! You're going to need to download and install a few things:
