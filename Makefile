@@ -19,14 +19,15 @@ preflight-uninstall:
 	@brew uninstall --force brew-cask
 	@brew bundle check >/dev/null || brew bundle
 	@echo "Verifying that Viscosity is functional, reinstalling otherwise..."
-	@open "$(shell brew cask list viscosity | tail -n1 | cut -d' ' -f1)/Applications/Viscosity.app/" || ( \
+	@open "/Applications/Viscosity.app/" || ( \
 		brew cask uninstall --force viscosity && \
+		brew update && \
 		brew bundle; \
 		exit 0; \
 	)
 
 preflight: preflight-uninstall
-	@open "$(shell brew cask list viscosity | tail -n1 | cut -d' ' -f1)/Applications/Viscosity.app/" || ( \
+	@open "/Applications/Viscosity.app/" || ( \
 		echo "Viscosity still isn't functional after re-installing. Please file an issue:" \
 		echo "  https://github.com/github/vpn/issues/new" && \
 		exit 1; \
