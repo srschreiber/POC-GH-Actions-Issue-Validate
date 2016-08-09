@@ -11,6 +11,12 @@ Try this:
     git pull origin master
     make viscosity
 
+If your Viscosity connection hangs after setup, you may need to renew your vpn certificate:
+
+    Run `.vpn renew` in Chat
+    cd ~/github/vpn
+    make
+
 ## Setup
 
 This README assumes the following:
