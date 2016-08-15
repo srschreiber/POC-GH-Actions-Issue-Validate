@@ -62,7 +62,7 @@ uninstall: clean
 
 pkcs.p12:
 	@echo "--------------------------------------------------------------------------------"
-	@echo "Fetching VPN credentials from remote.github.com. If this fails, please verify"
+	@echo "Fetching VPN credentials from remote.github.net. If this fails, please verify"
 	@echo "you have an account and a valid SSH configuration by running:"
 	@echo "  ssh remote.github.net whoami"
 	@echo "--------------------------------------------------------------------------------\n"
