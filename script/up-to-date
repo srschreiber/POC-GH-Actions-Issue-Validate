@@ -1,9 +1,9 @@
 #!/bin/sh
 
 git fetch --all
-LOCAL=$(git rev-parse @)
-REMOTE=$(git rev-parse @{u} 2>/dev/null || echo "none")
-BASE=$(git merge-base @ @{u} 2>/dev/null || echo "none")
+LOCAL=$(git rev-parse HEAD)
+REMOTE=$(git rev-parse @{upstream} 2>/dev/null || echo "none")
+BASE=$(git merge-base HEAD @{upstream} 2>/dev/null || echo "none")
 
 if [ $LOCAL = $REMOTE ]; then
   exit 0
