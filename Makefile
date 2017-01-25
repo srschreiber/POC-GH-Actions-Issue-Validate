@@ -1,7 +1,10 @@
-profiles = $(shell git ls-files | grep '^.*\.visc\/' | xargs -n1 dirname)
-connections = $(profiles:.visc=)
+prod_profiles = $(shell git ls-files | grep '^.*-prod.*\.visc\/' | xargs -n1 dirname)
+mgmt_profiles = $(shell git ls-files | grep '^.*-mgmt\.visc\/' | xargs -n1 dirname)
+prod_connections = $(prod_profiles:.visc=)
+mgmt_connections = $(mgmt_profiles:.visc=)
+connections = $(prod_connections) $(mgmt_connections)
 
-.PHONY: viscosity up-to-date preflight import $(connections)
+.PHONY: viscosity up-to-date preflight import import-prod import-mgmt $(connections)
 
 install: viscosity
 
@@ -33,7 +36,11 @@ preflight: preflight-uninstall
 		exit 1; \
 	)
 
-import: $(connections)
+import: import-prod
+
+import-prod: $(prod_connections)
+
+import-mgmt: $(mgmt_connections)
 
 $(connections): pkcs.p12
 	@echo "Importing connections...\n"
