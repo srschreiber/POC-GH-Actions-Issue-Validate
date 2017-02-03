@@ -40,6 +40,13 @@ cd ~/github/vpn
 make
 ```
 
+* If (and only if!) you need access to the management network (not an Infrastructure or Security team member? you probably don't :grinning:):
+
+```
+cd ~/github/vpn
+make import-mgmt
+```
+
 * Look for a new icon that looks like a globe in your menu bar. This is Viscosity. Click it, and verify each of the VPNs listed have connected.
 
 * Test that the connections are working using these links:
