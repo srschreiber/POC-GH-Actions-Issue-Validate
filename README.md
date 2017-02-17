@@ -51,7 +51,7 @@ make import-mgmt
 
 * Test that the connections are working using these links:
 
-  * [Production](http://mirror.iad.github.net/)
+  * [Production](https://mirror.iad.github.net/)
 
 * Click on the Viscosity menu bar icon and select Preferences. In the pop-up window, click About and then Register. Register your copy of Viscosity with this info:
 
