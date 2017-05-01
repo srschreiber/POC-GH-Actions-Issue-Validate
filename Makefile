@@ -77,6 +77,7 @@ pkcs.p12:
 		echo "Unable to download VPN credentials. Have you run '.vpn me' in Chat?" && \
 		exit 1; \
 	)
-	@echo | openssl pkcs12 -in pkcs.p12 -passin fd:0 -clcerts -nokeys 2>/dev/null | openssl x509 -noout -checkend 0 \
-	  || echo "\n###############\n# ! WARNING ! # your certificate has expired. Please run '.vpn renew' in chat.\n###############\n" \
-	  && exit 1
+	@echo | openssl pkcs12 -in pkcs.p12 -passin fd:0 -clcerts -nokeys 2>/dev/null | openssl x509 -noout -checkend 0 || ( \
+		echo "\n###############\n# ! WARNING ! # your certificate has expired. Please run '.vpn renew' in chat.\n###############\n" && \
+		exit 1; \
+	)
