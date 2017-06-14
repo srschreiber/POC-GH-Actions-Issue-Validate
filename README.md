@@ -23,7 +23,7 @@ This README assumes the following:
 
 * You're on a Mac ([running Windows?](#running-windows))
 * Your GitHub repos are under `~/github`.
-* You've opened an issue on [github/ops](https://github.com/github/ops), cc'ing @github/security-ops detailing what you need to access, and why, and you've been added to the VPN users.
+* You've opened an issue on [github/security-iam](https://github.com/github/security-iam), cc'ing @github/security-ops detailing what you need to access, and why, and you've been added to the VPN users.
 
 
 * Clone the repository
