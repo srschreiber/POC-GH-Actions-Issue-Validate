@@ -6,14 +6,15 @@
 
 Try this:
 
-    Run `hubot vpn me` in Chat
+    Run `.vpn me` in Slack
+    git clone https://github.com/github/vpn
     cd ~/github/vpn
     git pull origin master
     make viscosity
 
 If your Viscosity connection hangs after setup, you may need to renew your vpn certificate:
 
-    Run `.vpn renew` in Chat
+    Run `.vpn renew` in Slack
     cd ~/github/vpn
     make
 
@@ -73,7 +74,7 @@ by hand.
 
 If you want to blow away your current config and setup things from scratch:
 
-    `hubot vpn me` in Chat
+    `.vpn me` in Slack
     make uninstall
     make
 
