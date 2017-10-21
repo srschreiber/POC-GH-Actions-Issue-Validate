@@ -6,7 +6,7 @@
 
 Try this:
 
-    Run `.vpn me` in Slack
+    Run `.vpn me` in Slack - #security-iam channel
     git clone https://github.com/github/vpn
     cd ~/github/vpn
     git pull origin master
@@ -64,6 +64,37 @@ Key:   VM1V-HWJAOC-46IQGJ-ZAIVX3-6ZJ4Y4-UBNVBY
 
 **If this key doesn't work, email david@github.com to order more seats.**
 
+
+### If something goes wrong during Setup - Try These Steps
+
+1. Clone this repo into ~/github
+1. run `.vpn me` in the slack channel #security-iam
+2. scp the pkcs.p12 file by running the following command ```scp <your github username>@remote.github.net:vpn-credentials.p12 pkcs.p12```  example: `scp hamelsmu@remote.github.net:vpn-credentials.p12 pkcs.p12`
+
+3. download Viscosity from https://gear.githubapp.com/apps/
+
+4. Install Viscosity this will create directory `~/Library/Application Support/Viscosity/OpenVPN`
+
+5. Navigate to this directory, create 6 folders with names 1 - 6.  Example:
+```
+~/Library/Application Support/Viscosity/OpenVPN/1/
+~/Library/Application Support/Viscosity/OpenVPN/2/
+~/Library/Application Support/Viscosity/OpenVPN/3/
+~/Library/Application Support/Viscosity/OpenVPN/4/
+~/Library/Application Support/Viscosity/OpenVPN/5/
+~/Library/Application Support/Viscosity/OpenVPN/6/
+```
+
+6. Now there are 6 folders in the root of this repo (github/vpn) with `config.conf` files.  Copy these files (order doesn't matter) into each of these 6 folders you just created.  This is because there are 6 types of connections
+
+7.  copy that `pkcs.p12` file you scp'd in step 3 to each of the 6 directories in `~/Library/Application Support/Viscosity/OpenVPN/`  You just replicate this same file in each of these 6 directories.
+
+8.  Open Viscosity (CMD + Space type Viscosity) - a Globe icon will appear in your menubar
+
+9.  Try to connect!  It should work now!
+
+
+
 ## Updating
 
 Viscosity makes copies of all the configurations files and keys in the
@@ -88,9 +119,9 @@ Someone from the Ops team will help you as soon as they can!
 
     make uninstall
 
-## Have access to stafftools? 
+## Have access to stafftools?
 
-Unless you are a supportocat, you are required to [use the VPN connection to access stafftools](https://github.com/devtools/features/require_restricted_front_end). Having stafftools exposed on the internet is [something we are actively looking to change](https://github.com/github/github/issues/38109). **note** this change will: 
+Unless you are a supportocat, you are required to [use the VPN connection to access stafftools](https://github.com/devtools/features/require_restricted_front_end). Having stafftools exposed on the internet is [something we are actively looking to change](https://github.com/github/github/issues/38109). **note** this change will:
 
 1. Require you to access stafftools via https://admin.github.com/stafftools. https://github.com/stafftools will redirect you to https://admin.github.com/stafftools.
 1. Require you to connect to the production VPN to access https://admin.github.com/stafftools
