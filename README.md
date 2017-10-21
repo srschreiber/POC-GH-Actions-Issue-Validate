@@ -85,7 +85,7 @@ Key:   VM1V-HWJAOC-46IQGJ-ZAIVX3-6ZJ4Y4-UBNVBY
 ~/Library/Application Support/Viscosity/OpenVPN/6/
 ```
 
-6. Now there are 6 folders in the root of this repo with `config.conf` files.  Copy these files (order doesn't matter) into each of these 6 folders you just created.  This is because there are 6 types of connections
+6. Now there are 6 folders in the root of this repo (github/vpn) with `config.conf` files.  Copy these files (order doesn't matter) into each of these 6 folders you just created.  This is because there are 6 types of connections
 
 7.  copy that `pkcs.p12` file you scp'd in step 3 to each of the 6 directories in `~/Library/Application Support/Viscosity/OpenVPN/`  You just replicate this same file in each of these 6 directories.
 
