@@ -135,9 +135,9 @@ Bless your heart! You're going to need to download and install a few things:
 
 ### Configure
 
- * Download the Viscosity configuration files you want from this repository, ie `github-production.visc/config.conf`
+ * Download the Viscosity configuration files you want from this repository, ie `github-iad-prod.visc/config.conf`
  * Change their file extension to `.ovpn` and move them inside the
-   OpenVPN config directory (\Program Files\OpenVPN\Config), ie `C:\Program Files\OpenVPN\Config\github-production.ovpn`. PROTIP: You may need to configure windows to 'Show extensions of known files' to properly rename the file. If this was done correctly, its icon should change to resemble
+   OpenVPN config directory (\Program Files\OpenVPN\Config), ie `C:\Program Files\OpenVPN\Config\github-iad-prod.ovpn`. PROTIP: You may need to configure windows to 'Show extensions of known files' to properly rename the file. If this was done correctly, its icon should change to resemble
  * Run `hubot vpn me` in Chat
  * Use WinSCP to connect to `remote.github.com` and download `vpn-credentials.p12` into the OpenVPN config directory
  * Download the CA certificate from [github/puppet](https://github.com/github/puppet/blob/7475edc21fec64ff82f33c2e8f30d1873d676a23/modules/github/files/etc/ssl/ca_crt) into the same folder
