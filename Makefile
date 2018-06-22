@@ -60,6 +60,13 @@ $(connections): pkcs.p12
 clean:
 	@echo "Removing downloaded credentials..."
 	@rm -f pkcs.p12 *.visc/pkcs.p12
+	@if grep -q -m1 -e 'name github-production$$' ~/Library/Application\ Support/Viscosity/OpenVPN/*/config.conf 2>/dev/null ; then \
+		p=$$(dirname "$$(grep -l -m1 -e 'name github-production$$' ~/Library/Application\ Support/Viscosity/OpenVPN/*/config.conf)") ; \
+		echo "Cleaning up github-production VPN..." ; \
+		mv "$$p" "$$HOME/viscosity-github-production.off" ; \
+		killall Viscosity ; \
+		echo "Please restart viscosity to finish the cleanup" ; \
+	fi
 
 uninstall: clean
 	@echo "Disconnecting sessions, removing connections, and stopping Viscosity..."
