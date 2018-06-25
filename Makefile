@@ -73,7 +73,7 @@ pkcs.p12:
 	@echo "you have an account and a valid SSH configuration by running:"
 	@echo "  ssh remote.github.net whoami"
 	@echo "--------------------------------------------------------------------------------\n"
-	@scp remote.github.net:~/vpn-credentials.p12 pkcs.p12 || ( \
+	@scp -o ProxyCommand='ssh bastion.githubapp.com nc %h %p' shell.service.cp1-iad.github.net:~/vpn-credentials.p12 pkcs.p12 || ( \
 		echo "Unable to download VPN credentials. Have you run '.vpn me' in Chat?" && \
 		exit 1; \
 	)
