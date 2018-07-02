@@ -55,7 +55,6 @@ $(connections): pkcs.p12
 		echo "Importing new connection profile for $@..." ; \
 		open $@.visc ; \
 	fi
-	@osascript -e 'tell application "Viscosity" to connect "$@"'
 
 clean:
 	@echo "Removing downloaded credentials..."
