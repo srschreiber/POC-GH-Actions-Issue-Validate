@@ -62,7 +62,7 @@ Email: david@github.com
 Key:   VM1V-HWJAOC-46IQGJ-ZAIVX3-6ZJ4Y4-UBNVBY
 ```
 
-**If this key doesn't work, email david@github.com to order more seats.**
+**If this key doesn't work, contact #it-helpdesk so that we can order more seats.**
 
 
 ### If something goes wrong during Setup - Try These Steps
@@ -93,6 +93,13 @@ Key:   VM1V-HWJAOC-46IQGJ-ZAIVX3-6ZJ4Y4-UBNVBY
 
 9.  Try to connect!  It should work now!
 
+## VPN + Duo
+As of July 15 2018, all VPN endpoints require Duo. Our Duo implementation for the VPN is a little bit non-standard and there are a few thigns that you need to know:
+
+1. Duo Push is the only method that we support for VPN therefore you must have the Duo app installed and activated. 
+2. Duo is only required once every 24 hours for each site you connect to as long as you are connecting from the same IP.
+3. Viscosity has no mechanism to tell you that you need to answer a Duo prompt, so its best ot have your mobie device handy when VPNing. 
+4. If you fail to answer the Duo prompt within 1 minute of connecting, the VPN server will forcably disconnect you. For viscosity users, this will appear as an "Authentication Failed" message. 
 
 
 ## Updating
