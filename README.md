@@ -52,7 +52,7 @@ make import-mgmt
 
 * Test that the connections are working using these links:
 
-  * [Production](https://mirror.iad.github.net/)
+  * `ping -c 1 mirror.iad.github.net`
 
 * Click on the Viscosity menu bar icon and select Preferences. In the pop-up window, click About and then Register. Register your copy of Viscosity with this info:
 
@@ -62,14 +62,14 @@ Email: david@github.com
 Key:   VM1V-HWJAOC-46IQGJ-ZAIVX3-6ZJ4Y4-UBNVBY
 ```
 
-**If this key doesn't work, email david@github.com to order more seats.**
+**If this key doesn't work, contact #it-helpdesk so that we can order more seats.**
 
 
 ### If something goes wrong during Setup - Try These Steps
 
 1. Clone this repo into ~/github
 1. run `.vpn me` in the slack channel #security-iam
-2. scp the pkcs.p12 file by running the following command ```scp <your github username>@remote.github.net:vpn-credentials.p12 pkcs.p12```  example: `scp hamelsmu@remote.github.net:vpn-credentials.p12 pkcs.p12`
+2. scp the pkcs.p12 file by running the following command ```scp -o ProxyCommand='ssh bastion.githubapp.com nc %h %p' <your github username>@shell.service.cp1-iad.github.net:vpn-credentials.p12 pkcs.p12```  example: `scp -o ProxyCommand='ssh bastion.githubapp.com nc %h %p' hamelsmu@bastion.githubapp.com:vpn-credentials.p12 pkcs.p12`
 
 3. download Viscosity from https://gear.githubapp.com/apps/
 
@@ -93,6 +93,13 @@ Key:   VM1V-HWJAOC-46IQGJ-ZAIVX3-6ZJ4Y4-UBNVBY
 
 9.  Try to connect!  It should work now!
 
+## VPN + Duo
+As of July 15 2018, all VPN endpoints require Duo. Our Duo implementation for the VPN is a little bit non-standard and there are a few thigns that you need to know:
+
+1. Duo Push is the only method that we support for VPN therefore you must have the Duo app installed and activated. 
+2. Duo is only required once every 24 hours for each site you connect to as long as you are connecting from the same IP.
+3. Viscosity has no mechanism to tell you that you need to answer a Duo prompt, so its best ot have your mobie device handy when VPNing. 
+4. If you fail to answer the Duo prompt within 1 minute of connecting, the VPN server will forcably disconnect you. For viscosity users, this will appear as an "Authentication Failed" message. 
 
 
 ## Updating
@@ -138,10 +145,9 @@ Bless your heart! You're going to need to download and install a few things:
  * Download the Viscosity configuration files you want from this repository, ie `github-iad-prod.visc/config.conf`
  * Change their file extension to `.ovpn` and move them inside the
    OpenVPN config directory (\Program Files\OpenVPN\Config), ie `C:\Program Files\OpenVPN\Config\github-iad-prod.ovpn`. PROTIP: You may need to configure windows to 'Show extensions of known files' to properly rename the file. If this was done correctly, its icon should change to resemble
- * Run `hubot vpn me` in Chat
- * Use WinSCP to connect to `remote.github.com` and download `vpn-credentials.p12` into the OpenVPN config directory
+ * Run `.vpn me` in Chat
+ * ~~Use WinSCP to connect to `bastion.githubapp.com` and download `vpn-credentials.p12` into the OpenVPN config directory~~ This is really dificult for windows users at the moment and we are awfully sorry about that. You'll need to ssh to `bastion.githubapp.com` and then to `shell.service.cp1-iad.github.net`. Once on `shell`, `vpn-credentials.p12` will be in your home directory. You'll probably need to `cat vpn-credentials.p12` and then copy/paste it into a file named `pkcs.p12` on your machine. If you run into problems, feel free to swing by #security-ops-eng and we'll help you out. We're working to make this better!
  * Download the CA certificate from [github/puppet](https://github.com/github/puppet/blob/7475edc21fec64ff82f33c2e8f30d1873d676a23/modules/github/files/etc/ssl/ca_crt) into the same folder
- * Rename the PKCS#12 container from `vpn-credentials.p12` to `pkcs.p12`
 
 ### Run
  * Start OpenVPN GUI **in administrator mode** (ie right click the menu item, and select "Run as Administrator")
@@ -155,7 +161,7 @@ called "Add a new TAP virtual ethernet adapter".
 
 ## For Ops.
 
-The certificates are generated on ops-vpn1. Check `/data/vpn-ca` and the [github/vpn-ca](https://github.com/github/vpn-ca) repo for more info about the CA store.
+The certificates are generated on `shell.service.cp1-iad.github.net`. Check `/data/vpn-ca` and the [github/vpn-ca](https://github.com/github/vpn-ca) repo for more info about the CA store.
 
 For production access, people will need to be configured in `hieradata/common.yaml` . Check `github::staff::vpn` entry in [ops_vpn.pp](https://github.com/github/puppet/blob/master/modules/github/manifests/role/ops_vpn.pp#L144-147) for the current set.
 
