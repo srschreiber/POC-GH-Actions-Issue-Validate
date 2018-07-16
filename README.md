@@ -69,7 +69,7 @@ Key:   VM1V-HWJAOC-46IQGJ-ZAIVX3-6ZJ4Y4-UBNVBY
 
 1. Clone this repo into ~/github
 1. run `.vpn me` in the slack channel #security-iam
-2. scp the pkcs.p12 file by running the following command ```scp <your github username>@remote.github.net:vpn-credentials.p12 pkcs.p12```  example: `scp hamelsmu@remote.github.net:vpn-credentials.p12 pkcs.p12`
+2. scp the pkcs.p12 file by running the following command ```scp <your github username>@bastion.githubapp.com:vpn-credentials.p12 pkcs.p12```  example: `scp hamelsmu@bastion.githubapp.com:vpn-credentials.p12 pkcs.p12`
 
 3. download Viscosity from https://gear.githubapp.com/apps/
 
@@ -146,7 +146,7 @@ Bless your heart! You're going to need to download and install a few things:
  * Change their file extension to `.ovpn` and move them inside the
    OpenVPN config directory (\Program Files\OpenVPN\Config), ie `C:\Program Files\OpenVPN\Config\github-iad-prod.ovpn`. PROTIP: You may need to configure windows to 'Show extensions of known files' to properly rename the file. If this was done correctly, its icon should change to resemble
  * Run `hubot vpn me` in Chat
- * Use WinSCP to connect to `remote.github.com` and download `vpn-credentials.p12` into the OpenVPN config directory
+ * Use WinSCP to connect to `bastion.githubapp.com` and download `vpn-credentials.p12` into the OpenVPN config directory
  * Download the CA certificate from [github/puppet](https://github.com/github/puppet/blob/7475edc21fec64ff82f33c2e8f30d1873d676a23/modules/github/files/etc/ssl/ca_crt) into the same folder
  * Rename the PKCS#12 container from `vpn-credentials.p12` to `pkcs.p12`
 
