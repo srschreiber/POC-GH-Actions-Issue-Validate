@@ -146,9 +146,8 @@ Bless your heart! You're going to need to download and install a few things:
  * Change their file extension to `.ovpn` and move them inside the
    OpenVPN config directory (\Program Files\OpenVPN\Config), ie `C:\Program Files\OpenVPN\Config\github-iad-prod.ovpn`. PROTIP: You may need to configure windows to 'Show extensions of known files' to properly rename the file. If this was done correctly, its icon should change to resemble
  * Run `.vpn me` in Chat
- * ~~Use WinSCP to connect to `bastion.githubapp.com` and download `vpn-credentials.p12` into the OpenVPN config directory~~ This is really dificult at the moment and we are sorry about that. You'll need to ssh to `bastion.githubapp.com` and then to `shell.service.cp1-iad.github.net`. Once on `shell`, `vpn-credentials.p12` will be in your home directory. If you run into problems, feel free to swing by #security-ops-eng and we'll help you out. 
+ * ~~Use WinSCP to connect to `bastion.githubapp.com` and download `vpn-credentials.p12` into the OpenVPN config directory~~ This is really dificult for windows users at the moment and we are awfully sorry about that. You'll need to ssh to `bastion.githubapp.com` and then to `shell.service.cp1-iad.github.net`. Once on `shell`, `vpn-credentials.p12` will be in your home directory. You'll probably need to `cat vpn-credentials.p12` and then copy/paste it into a file named `pkcs.p12` on your machine. If you run into problems, feel free to swing by #security-ops-eng and we'll help you out. We're working to make this better!
  * Download the CA certificate from [github/puppet](https://github.com/github/puppet/blob/7475edc21fec64ff82f33c2e8f30d1873d676a23/modules/github/files/etc/ssl/ca_crt) into the same folder
- * Rename the PKCS#12 container from `vpn-credentials.p12` to `pkcs.p12`
 
 ### Run
  * Start OpenVPN GUI **in administrator mode** (ie right click the menu item, and select "Run as Administrator")
