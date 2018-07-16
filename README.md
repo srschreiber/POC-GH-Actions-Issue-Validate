@@ -162,7 +162,7 @@ called "Add a new TAP virtual ethernet adapter".
 
 ## For Ops.
 
-The certificates are generated on ops-vpn1. Check `/data/vpn-ca` and the [github/vpn-ca](https://github.com/github/vpn-ca) repo for more info about the CA store.
+The certificates are generated on `shell.service.cp1-iad.github.net`. Check `/data/vpn-ca` and the [github/vpn-ca](https://github.com/github/vpn-ca) repo for more info about the CA store.
 
 For production access, people will need to be configured in `hieradata/common.yaml` . Check `github::staff::vpn` entry in [ops_vpn.pp](https://github.com/github/puppet/blob/master/modules/github/manifests/role/ops_vpn.pp#L144-147) for the current set.
 
