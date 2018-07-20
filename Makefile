@@ -77,9 +77,11 @@ pkcs.p12:
 	@echo "--------------------------------------------------------------------------------"
 	@echo "Fetching VPN credentials from shell.service.cp1-iad.github.net via bastion.githubapp.com. If this fails, please verify"
 	@echo "you have an account and a valid SSH configuration by running:"
-	@echo "  ssh -o ProxyCommand='ssh bastion.githubapp.com nc %h %p' shell.service.cp1-iad.github.net whoami"
+	@echo "  ssh -o \"ConnectTimeout 120\" -o \"ProxyJump bastion.githubapp.com\" shell.service.cp1-iad.github.net whoami"
 	@echo "--------------------------------------------------------------------------------\n"
-	@scp -o ProxyCommand='ssh bastion.githubapp.com nc %h %p' shell.service.cp1-iad.github.net:~/vpn-credentials.p12 pkcs.p12 || ( \
+	@rm -f pkcs.p12
+	@ssh -o "ConnectTimeout 120" -o "ProxyJump bastion.githubapp.com" shell.service.cp1-iad.github.net "cat ~/vpn-credentials.p12" > pkcs.p12
+	@test -f "pkcs.p12" || ( \
 		echo "Unable to download VPN credentials. Have you run '.vpn me' in Chat?" && \
 		exit 1; \
 	)
