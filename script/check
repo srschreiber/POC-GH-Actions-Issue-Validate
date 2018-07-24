@@ -12,7 +12,14 @@ trap cleanup EXIT
 
 set -e
 
-VISCOSITY_CONFIG_HOME="$HOME/Library/Application Support/Viscosity/OpenVPN"
+if [ "$(uname -s)" = "Darwin" ]; then
+  VISCOSITY_CONFIG_HOME="$HOME/Library/Application Support/Viscosity/OpenVPN"
+else
+  VISCOSITY_CONFIG_HOME=$(pwd)
+  echo "!!!!!!!!!"
+  echo "Only OSX is officially supported. You may need some manual intervention."
+  echo "!!!!!!!!!"
+fi
 find "$VISCOSITY_CONFIG_HOME" -type d | while read -r dir; do
   if [ -f "$dir/config.conf" ] && [ -f "$dir/pkcs.p12" ]; then
     name=$(grep "^#viscosity name" "$dir/config.conf" | awk '{ print $3 }')
