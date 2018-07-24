@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# Script that lists all viscosity certificates and their serial, start, and end dates.
+# This can be compared to `.vpn check` to make sure that the correct certificates are
+# installed. Intended as a troubleshooting tool.
+
+TRASHDIR=$(mktemp -d /tmp/vpncheck.XXXXXXXXXXX)
+cleanup() {
+  rm -rf "$TRASHDIR"
+}
+trap cleanup EXIT
+
+set -e
+
+VISCOSITY_CONFIG_HOME="$HOME/Library/Application Support/Viscosity/OpenVPN"
+find "$VISCOSITY_CONFIG_HOME" -type d | while read -r dir; do
+  if [ -f "$dir/config.conf" ] && [ -f "$dir/pkcs.p12" ]; then
+    name=$(grep "^#viscosity name" "$dir/config.conf" | awk '{ print $3 }')
+    echo "---"
+    echo "$name"
+    openssl pkcs12 -in "$dir/pkcs.p12" -clcerts -nokeys -out "$TRASHDIR/certificate.pem" -password "pass:" 2>/dev/null
+    start=$(openssl x509 -in "$TRASHDIR/certificate.pem" -noout -startdate | cut -d"=" -f2)
+    end=$(openssl x509 -in "$TRASHDIR/certificate.pem" -noout -enddate | cut -d"=" -f2)
+    serial=$(openssl x509 -in "$TRASHDIR/certificate.pem" -noout -serial | cut -d"=" -f2)
+    echo "- Start date: ${start}"
+    echo "- Expiration date: ${end}"
+    echo "- Serial number: ${serial}"
+  fi
+done
