@@ -17,6 +17,9 @@ up-to-date:
 	@echo "Verifying the local repo is up to date..."
 	@./script/up-to-date
 
+check:
+	@./script/check
+
 preflight-uninstall:
 	@echo "Verifying that Viscosity is installed, running Homebrew otherwise..."
 	@brew uninstall --force brew-cask
