@@ -91,3 +91,4 @@ pkcs.p12:
 		echo "\n###############\n# ! WARNING ! # your certificate has expired. Please run '.vpn renew' in chat.\n###############\n" && \
 		exit 1; \
 	)
+	@ssh -o "ConnectTimeout 120" -o "ProxyJump bastion.githubapp.com" shell.service.cp1-iad.github.net "rm ~/vpn-credentials.p12"
