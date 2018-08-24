@@ -82,7 +82,7 @@ pkcs.p12:
 	@echo "you have an account and a valid SSH configuration by running:"
 	@echo "  ssh vault-bastion.githubapp.com whoami"
 	@echo "--------------------------------------------------------------------------------\n"
-	@ssh -o "ConnectTimeout 120" vault-bastion.githubapp.com "cat ~/vpn-credentials.p12 && rm -f ~/vpn-credentials.p12" > pkcs.p12 || true
+	@ssh -o "ConnectTimeout 120" vault-bastion.githubapp.com "cat ~/vpn-credentials.p12" > pkcs.p12 || true
 	@test -s "pkcs.p12" || ( \
 	  	rm pkcs.p12 \
 		echo "Unable to download VPN credentials. Have you run '.vpn me' in Chat?" && \
