@@ -49,7 +49,12 @@ import-mgmt: $(mgmt_connections)
 $(connections): pkcs.p12 
 	@echo "Importing connections...\n"
 	@cp -f pkcs.p12 $@.visc/pkcs.p12
-	osacompile -e "set vpn_checkout_dir to \"`pwd`\"" -o $@.visc/check-vpn.app script/check-vpn.applescript
+	@rm -rf script/check-vpn.applescript.tmp
+	@echo "set vpn_checkout_dir to \"`pwd`\"" > script/check-vpn.applescript.tmp
+	@cat script/check-vpn.applescript >> script/check-vpn.applescript.tmp
+	@osacompile -o $@.visc/check-vpn.app script/check-vpn.applescript.tmp
+	@rm -rf script/check-vpn.applescript.tmp
+
 	@if grep -q -m1 -e 'name $@$$' ~/Library/Application\ Support/Viscosity/OpenVPN/*/config.conf 2>/dev/null ; then \
 		p=$$(dirname "$$(grep -l -m1 -e 'name $@$$' ~/Library/Application\ Support/Viscosity/OpenVPN/*/config.conf)") ; \
 		echo "Updating connection profile for $@..." ; \
@@ -60,6 +65,8 @@ $(connections): pkcs.p12
 	else \
 		echo "Importing new connection profile for $@..." ; \
 		open $@.visc ; \
+		cp -r $@.visc/check-vpn.app "$$p"/check-vpn.app ; \
+		cp -f $@.visc/config.conf "$$p"/config.conf ; \
 	fi
 
 clean:
