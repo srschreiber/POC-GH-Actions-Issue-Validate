@@ -20,6 +20,9 @@ up-to-date:
 check:
 	@./script/check
 
+applescript-test:
+  @echo "Verifying the local repo is up to date..."
+
 preflight-uninstall:
 	@echo "Verifying that Viscosity is installed, running Homebrew otherwise..."
 	@brew uninstall --force brew-cask
