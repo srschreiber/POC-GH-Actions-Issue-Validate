@@ -4,7 +4,7 @@ prod_connections = $(prod_profiles:.visc=)
 mgmt_connections = $(mgmt_profiles:.visc=)
 connections = $(prod_connections) $(mgmt_connections)
 
-.PHONY: viscosity up-to-date preflight import import-prod import-mgmt $(connections)
+.PHONY: viscosity up-to-date preflight import import-prod import-mgmt $(connections) start
 
 install: viscosity
 
@@ -20,8 +20,6 @@ up-to-date:
 check:
 	@./script/check
 
-applescript-test:
-  @echo "Verifying the local repo is up to date..."
 
 preflight-uninstall:
 	@echo "Verifying that Viscosity is installed, running Homebrew otherwise..."
@@ -48,13 +46,15 @@ import-prod: $(prod_connections)
 
 import-mgmt: $(mgmt_connections)
 
-$(connections): pkcs.p12
+$(connections): pkcs.p12 
 	@echo "Importing connections...\n"
 	@cp -f pkcs.p12 $@.visc/pkcs.p12
+	osacompile -e "set vpn_checkout_dir to \"`pwd`\"" -o $@.visc/check-vpn.app script/check-vpn.applescript
 	@if grep -q -m1 -e 'name $@$$' ~/Library/Application\ Support/Viscosity/OpenVPN/*/config.conf 2>/dev/null ; then \
 		p=$$(dirname "$$(grep -l -m1 -e 'name $@$$' ~/Library/Application\ Support/Viscosity/OpenVPN/*/config.conf)") ; \
 		echo "Updating connection profile for $@..." ; \
-		osascript -e 'tell application "Viscosity" to disconnect "$@"' && sleep 3 ; \
+		osascript -e 'tell application "Viscosity" to quit "$@"' && sleep 3 ; \
+    cp -r $@.visc/check-vpn.app "$$p"/check-vpn.app ; \
 		cp -f $@.visc/config.conf "$$p"/config.conf ; \
 		cp -f $@.visc/pkcs.p12 "$$p"/pkcs.p12 ; \
 	else \
@@ -95,3 +95,7 @@ pkcs.p12:
 		echo "\n###############\n# ! WARNING ! # your certificate has expired. Please run '.vpn renew' in chat.\n###############\n" && \
 		exit 1; \
 	)
+
+start: 
+	@echo "Starting Viscosity..."
+	/usr/bin/open /Applications/Viscosity.app/
