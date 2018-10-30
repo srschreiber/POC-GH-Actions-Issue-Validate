@@ -6,3 +6,4 @@ ca_crt
 *.crt
 *p12
 KEYS
+*.visc/check-vpn.app
