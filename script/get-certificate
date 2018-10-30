@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# This script interacts with the vault-based certificate authority to issue a new
+# certificate for the user (private key and public key) which never touches the disk
+# on a shared server. Retrieve the list of VPNs for which the user is entitled and
+# install the configurations and certificate there.
+
+VAULT_BASTION="vault-bastion.githubapp.com"
+TARGET_SCRIPT="/data/vpn-credential-issuer/bin/vpn-credential-issuer.sh"
+
+set -e
+set -o pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+TRASHDIR=$(mktemp -d /tmp/get-certificate.XXXXXXXXXXXXX)
+cleanup() {
+  rm -rf "$TRASHDIR"
+}
+trap cleanup EXIT
+
+#
+# We will pass the dotcom password to the script via STDIN.
+#
+
+echo ""
+echo "-------------------------------------------------------"
+echo "Requesting VPN certificate from Vault via vault-bastion"
+echo "-------------------------------------------------------"
+echo ""
+
+if [ -z "${GITHUB_PASSWORD}" ]; then
+   read -r -s -p "github.com password: " GITHUB_PASSWORD
+   echo
+   echo "{GITHUB_PASSWORD}" | grep -q "^$" && unset GITHUB_PASSWORD
+   export GITHUB_PASSWORD
+fi
+
+#
+# Call the VPN credential issuer script on the remote host. This returns two lines:
+# 1. Comma-separated list of VPNs for which the user is authorized
+# 2. Base64-encoded PKCS12 certificate container
+#
+
+echo ""
+echo "Please be prepared for 2 Duo pushes (one from the bastion and one from Vault)!"
+echo ""
+
+echo "${GITHUB_PASSWORD}" | ssh "$VAULT_BASTION" "env VAULT_NONINTERACTIVE='true' \"$TARGET_SCRIPT\"" > "$TRASHDIR/certificate.raw"
+profiles=$(head -1 "$TRASHDIR/certificate.raw" | tr "," " ")
+tail -1 "$TRASHDIR/certificate.raw" | base64 -D > "$TRASHDIR/vpn.pkcs12"
+
+#
+# Import each authorized connection
+#
+
+for profile in $profiles; do
+  echo ""
+
+  # TEMPORARY HACK UNTIL THIS IS DEPLOYED MORE WIDELY
+  if [ "$profile" != "github-sdc42-mgmt" ]; then
+    echo "*** TEMPORARILY SKIPPING $profile."
+    echo "Remove this skip when port 1195 is active everywhere."
+    continue
+  fi
+
+  if [ ! -d "$DIR/$profile.visc" ]; then
+    echo "Warning: You are authorized for profile ${profile} but no template configuration exists." 1>&2
+    echo "Installation of ${profile} is being skipped. Please report this to #security-ops-eng." 1>&2
+    continue
+  fi
+
+  echo "set vpn_checkout_dir to \"$DIR\"" > "$TRASHDIR/check-vpn.applescript.tmp"
+	cat "$DIR/script/check-vpn.applescript" >> "$TRASHDIR/check-vpn.applescript.tmp"
+	osacompile -o "$DIR/$profile.visc/check-vpn.app" "$TRASHDIR/check-vpn.applescript.tmp"
+
+  if grep -q -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf 2>/dev/null ; then
+    target=$(grep -l -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf)
+    target_dir=$(dirname "$target")
+
+    echo "Updating connection profile for $profile..."
+    osascript -e "tell application \"Viscosity\" to quit \"$profile\"" || true
+    sleep 3
+    cp -f "$DIR/$profile.visc/config.conf" "$target_dir/config.conf"
+		cp -f "$TRASHDIR/vpn.pkcs12" "$target_dir/pkcs.p12"
+		rm -rf "$target_dir/check-vpn.app"
+		cp -r "$DIR/$profile.visc/check-vpn.app" "$target_dir/check-vpn.app"
+  else
+    echo "Importing new connection profile for $profile..."
+    open "$profile.visc"
+  fi
+done
