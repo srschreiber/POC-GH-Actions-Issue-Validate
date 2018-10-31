@@ -14,24 +14,8 @@ up-to-date:
 check:
 	@./script/check
 
-preflight-uninstall:
-	@echo "Verifying that Viscosity is installed, running Homebrew otherwise..."
-	@brew uninstall --force brew-cask
-	@brew bundle check >/dev/null || brew bundle
-	@echo "Verifying that Viscosity is functional, reinstalling otherwise..."
-	@open "/Applications/Viscosity.app/" || ( \
-		brew cask uninstall --force viscosity && \
-		brew update && \
-		brew bundle; \
-		exit 0; \
-	)
-
-preflight: preflight-uninstall
-	@open "/Applications/Viscosity.app/" || ( \
-		echo "Viscosity still isn't functional after re-installing. Please file an issue:" \
-		echo "  https://github.com/github/vpn/issues/new" && \
-		exit 1; \
-	)
+preflight:
+	@./script/install-viscosity
 
 import-prod:
 	@echo "VPN certificate issuance now imports all connections to which you are entitled.\n"
