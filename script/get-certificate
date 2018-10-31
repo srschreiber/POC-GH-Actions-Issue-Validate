@@ -50,6 +50,22 @@ profiles=$(head -1 "$TRASHDIR/certificate.raw" | tr "," " ")
 tail -1 "$TRASHDIR/certificate.raw" | base64 -D > "$TRASHDIR/vpn.pkcs12"
 
 #
+# If viscosity is not installed here, we really don't know what to do. Dump a copy of the
+# pkcs12 certificate into the user's checkout of `github/vpn` and then call it a day.
+#
+
+if [ ! -d "/Applications/Viscosity.app" ]; then
+  cp "$TRASHDIR/vpn.pkcs12" "$DIR/pkcs.p12"
+  echo ""
+  echo "Viscosity does not seem to be installed on this system, or this system is something"
+  echo "other than the standard company issue developer Mac. I've put the certificate in"
+  echo "$DIR/pkcs.p12"
+  echo ""
+  echo "You'll need to configure your VPN client accordingly."
+  exit 0
+fi
+
+#
 # Import each authorized connection
 #
 
