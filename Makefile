@@ -65,4 +65,4 @@ pkcs.p12:
 
 start:
 	@echo "Starting Viscosity..."
-	/usr/bin/open /Applications/Viscosity.app/
+	@/usr/bin/open /Applications/Viscosity.app/
