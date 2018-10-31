@@ -56,13 +56,6 @@ tail -1 "$TRASHDIR/certificate.raw" | base64 -D > "$TRASHDIR/vpn.pkcs12"
 for profile in $profiles; do
   echo ""
 
-  # TEMPORARY HACK UNTIL THIS IS DEPLOYED MORE WIDELY
-  if [ "$profile" != "github-sdc42-mgmt" ]; then
-    echo "*** TEMPORARILY SKIPPING $profile."
-    echo "Remove this skip when port 1195 is active everywhere."
-    continue
-  fi
-
   if [ ! -d "$DIR/$profile.visc" ]; then
     echo "Warning: You are authorized for profile ${profile} but no template configuration exists." 1>&2
     echo "Installation of ${profile} is being skipped. Please report this to #security-ops-eng." 1>&2
