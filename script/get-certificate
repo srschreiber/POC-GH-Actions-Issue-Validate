@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 # This script interacts with the vault-based certificate authority to issue a new
 # certificate for the user (private key and public key) which never touches the disk
@@ -88,6 +88,8 @@ for profile in $profiles; do
   if [[ $? -ne 0 ]]; then
     echo "Importing new connection profile for $profile..."
     open "$profile.visc"
+    # I believe this is required to give viscosity a chance to actually write the imported config
+    sleep 1
   fi
 
   # Then copy the files that makeup the config again. This is needed because of a bug in viscosity
@@ -105,7 +107,7 @@ for profile in $profiles; do
 done
 
 osascript -e "tell application \"Viscosity\" to quit \"$profile\"" || true
-sleep 2
-pkill Viscosity
-sleep 2
+sleep 1
+pkill -u $UID Viscosity
+sleep 1
 open /Applications/Viscosity.app
