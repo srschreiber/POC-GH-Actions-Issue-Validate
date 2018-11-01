@@ -47,7 +47,7 @@ echo ""
 
 echo "${GITHUB_PASSWORD}" | ssh "$VAULT_BASTION" "env VAULT_NONINTERACTIVE='true' \"$TARGET_SCRIPT\"" > "$TRASHDIR/certificate.raw"
 profiles=$(head -1 "$TRASHDIR/certificate.raw" | tr "," " ")
-tail -1 "$TRASHDIR/certificate.raw" | base64 -D > "$TRASHDIR/vpn.pkcs12"
+tail -1 "$TRASHDIR/certificate.raw" | base64 --decode > "$TRASHDIR/vpn.pkcs12"
 
 #
 # If viscosity is not installed here, we really don't know what to do. Dump a copy of the
