@@ -84,7 +84,8 @@ for profile in $profiles; do
 	osacompile -o "$DIR/$profile.visc/check-vpn.app" "$TRASHDIR/check-vpn.applescript.tmp"
 
   # first import the .visc file if a config of the same name doesn't already exist
-  if grep -v -q -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf 2>/dev/null ; then
+  grep -q -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf 2>/dev/null
+  if [[ $? -ne 0 ]]; then
     echo "Importing new connection profile for $profile..."
     open "$profile.visc"
   fi
@@ -105,4 +106,4 @@ done
 
 osascript -e "tell application \"Viscosity\" to quit \"$profile\"" || true
 sleep 3
-open /Applications/Viscosity.app/
+open /Applications/Viscosity.app
