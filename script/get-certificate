@@ -105,5 +105,7 @@ for profile in $profiles; do
 done
 
 osascript -e "tell application \"Viscosity\" to quit \"$profile\"" || true
-sleep 3
+sleep 2
+pkill Viscosity
+sleep 2
 open /Applications/Viscosity.app
