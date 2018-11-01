@@ -83,29 +83,26 @@ for profile in $profiles; do
   cp $TRASHDIR/check-vpn.applescript.tmp "$DIR/$profile.visc/"
 	osacompile -o "$DIR/$profile.visc/check-vpn.app" "$TRASHDIR/check-vpn.applescript.tmp"
 
+  # first import the .visc file if a config of the same name doesn't already exist
+  if grep -v -q -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf 2>/dev/null ; then
+    echo "Importing new connection profile for $profile..."
+    open "$profile.visc"
+  fi
+
+  # Then copy the files that makeup the config again. This is needed because of a bug in viscosity
   if grep -q -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf 2>/dev/null ; then
     target=$(grep -l -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf)
     target_dir=$(dirname "$target")
 
     echo "Updating connection profile for $profile..."
-    osascript -e "tell application \"Viscosity\" to quit \"$profile\"" || true
-    sleep 3
     cp -f "$DIR/$profile.visc/config.conf" "$target_dir/config.conf"
 		cp -f "$TRASHDIR/vpn.pkcs12" "$target_dir/pkcs.p12"
 		rm -rf "$target_dir/check-vpn.app"
 		cp -r "$DIR/$profile.visc/check-vpn.app" "$target_dir/check-vpn.app"
-  else
-    echo "Importing new connection profile for $profile..."
-    open "$profile.visc"
-    target=$(grep -l -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf)
-    target_dir=$(dirname "$target")
-
-    osascript -e "tell application \"Viscosity\" to quit \"$profile\"" || true
-    sleep 3
-    cp -f "$DIR/$profile.visc/config.conf" "$target_dir/config.conf"
-		cp -f "$TRASHDIR/vpn.pkcs12" "$target_dir/pkcs.p12"
-		rm -rf "$target_dir/check-vpn.app"
-		cp -r "$DIR/$profile.visc/check-vpn.app" "$target_dir/check-vpn.app"
-
   fi
+
 done
+
+osascript -e "tell application \"Viscosity\" to quit \"$profile\"" || true
+sleep 3
+open /Applications/Viscosity.app/
