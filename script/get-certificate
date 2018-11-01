@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # This script interacts with the vault-based certificate authority to issue a new
 # certificate for the user (private key and public key) which never touches the disk
@@ -84,7 +84,7 @@ for profile in $profiles; do
 	osacompile -o "$DIR/$profile.visc/check-vpn.app" "$TRASHDIR/check-vpn.applescript.tmp"
 
   # first import the .visc file if a config of the same name doesn't already exist
-  grep -q -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf 2>/dev/null
+  grep -q -R -m1 -e "name $profile" "$HOME/Library/Application Support/Viscosity/OpenVPN/"
   if [[ $? -ne 0 ]]; then
     echo "Importing new connection profile for $profile..."
     open "$profile.visc"
