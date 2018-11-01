@@ -1,5 +1,5 @@
 try
-	set diff to do shell script "cd " & vpn_checkout_dir & ";  git fetch; git diff origin/master"
+	set diff to do shell script "cd " & vpn_checkout_dir & "; sleep 10;  git fetch; git diff origin/master"
 on error the error_message number the error_number
 	display dialog "Error: " & the error_number & ". " & the error_message buttons {"OK"} default button 1
 end try
