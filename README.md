@@ -1,106 +1,42 @@
 # GitHub VPN
 
-## Access all of the things. Securely.
+**The authoritative document on VPN access is in [GitHubber](https://githubber.com/article/crafts/engineering/production-vpn-access).**
 
-#### Having trouble accessing the VPN?
+## Troubleshooting
 
-Try this:
+### VPN + Duo
 
-    Run `.vpn me` in Slack - #security-iam channel
-    git clone https://github.com/github/vpn
-    cd ~/github/vpn
-    git pull origin master
-    make viscosity
+All VPN endpoints require Duo. Our Duo implementation for the VPN is a little bit non-standard and there are a few things that you need to know:
 
-If your Viscosity connection hangs after setup, you may need to renew your vpn certificate:
-
-    Run `.vpn renew` in Slack
-    cd ~/github/vpn
-    make
-
-## Setup
-
-This README assumes the following:
-
-* You're on a Mac ([running Windows?](#running-windows))
-* Your GitHub repos are under `~/github`.
-* You've opened an issue on [github/security-iam](https://github.com/github/security-iam), cc'ing @github/security-ops detailing what you need to access, and why, and you've been added to the VPN users.
-
-
-* Clone the repository
-
-```
-cd ~/github
-git clone https://github.com/github/vpn
-```
-
-* Setup the VPN connections
-
-```
-cd ~/github/vpn
-make
-```
-
-* If (and only if!) you need access to the management network (not an Infrastructure or Security team member? you probably don't :grinning:):
-
-```
-cd ~/github/vpn
-make import-mgmt
-```
-
-* Look for a new icon that looks like a globe in your menu bar. This is Viscosity. Click it, and verify each of the VPNs listed have connected.
-
-* Test that the connections are working using these links:
-
-  * `ping -c 1 mirror.iad.github.net`
-
-* Click on the Viscosity menu bar icon and select Preferences. In the pop-up window, click About and then Register. Register your copy of Viscosity with this info:
-
-```
-Name:  GitHub
-Email: david@github.com
-Key:   VM1V-HWJAOC-46IQGJ-ZAIVX3-6ZJ4Y4-UBNVBY
-```
-
-**If this key doesn't work, contact #it-helpdesk so that we can order more seats.**
-
+1. Duo Push is the only method that we support for VPN therefore you must have the Duo app installed and activated.
+2. Duo is only required once every 24 hours for each site you connect to as long as you are connecting from the same IP.
+3. Viscosity has no mechanism to tell you that you need to answer a Duo prompt, so its best to have your mobile device handy when VPNing.
+4. If you fail to answer the Duo prompt within 1 minute of connecting, the VPN server will forcibly disconnect you. For viscosity users, this will appear as an "Authentication Failed" message.
 
 ### If something goes wrong during Setup - Try These Steps
 
 1. Clone this repo into ~/github
-1. run `.vpn me` in the slack channel #security-iam
-2. scp the pkcs.p12 file by running the following command ```scp -o ProxyCommand='ssh bastion.githubapp.com nc %h %p' <your github username>@shell.service.cp1-iad.github.net:vpn-credentials.p12 pkcs.p12```  example: `scp -o ProxyCommand='ssh bastion.githubapp.com nc %h %p' hamelsmu@bastion.githubapp.com:vpn-credentials.p12 pkcs.p12`
+1. Run `.vpn me` in chat
+1. scp the pkcs.p12 file by running the following command ```scp vault-bastion.githubapp.com:vpn-credentials.p12 pkcs.p12```
+1. Download Viscosity from https://gear.githubapp.com/apps/
+1. Install Viscosity this will create directory `~/Library/Application Support/Viscosity/OpenVPN`
+1. Navigate to this directory, create folders with names 1 - 7. This is because there are 7 types of connections. Example:
+    ```
+    ~/Library/Application Support/Viscosity/OpenVPN/1/
+    ~/Library/Application Support/Viscosity/OpenVPN/2/
+    ~/Library/Application Support/Viscosity/OpenVPN/3/
+    ~/Library/Application Support/Viscosity/OpenVPN/4/
+    ~/Library/Application Support/Viscosity/OpenVPN/5/
+    ~/Library/Application Support/Viscosity/OpenVPN/6/
+    ~/Library/Application Support/Viscosity/OpenVPN/7/
+    ```
+1. Now there are 7 folders in the root of this repo (github/vpn) with `config.conf` files. Copy these files (order doesn't matter) into each of the folders you just created.
 
-3. download Viscosity from https://gear.githubapp.com/apps/
+1. Copy that `pkcs.p12` file you scp'd in step 3 to each of the directories in `~/Library/Application Support/Viscosity/OpenVPN/`  You just replicate this same file in each of these directories.
 
-4. Install Viscosity this will create directory `~/Library/Application Support/Viscosity/OpenVPN`
+1.  Open Viscosity (CMD + Space type Viscosity) - a Globe icon will appear in your menubar
 
-5. Navigate to this directory, create 6 folders with names 1 - 6.  Example:
-```
-~/Library/Application Support/Viscosity/OpenVPN/1/
-~/Library/Application Support/Viscosity/OpenVPN/2/
-~/Library/Application Support/Viscosity/OpenVPN/3/
-~/Library/Application Support/Viscosity/OpenVPN/4/
-~/Library/Application Support/Viscosity/OpenVPN/5/
-~/Library/Application Support/Viscosity/OpenVPN/6/
-```
-
-6. Now there are 6 folders in the root of this repo (github/vpn) with `config.conf` files.  Copy these files (order doesn't matter) into each of these 6 folders you just created.  This is because there are 6 types of connections
-
-7.  copy that `pkcs.p12` file you scp'd in step 3 to each of the 6 directories in `~/Library/Application Support/Viscosity/OpenVPN/`  You just replicate this same file in each of these 6 directories.
-
-8.  Open Viscosity (CMD + Space type Viscosity) - a Globe icon will appear in your menubar
-
-9.  Try to connect!  It should work now!
-
-## VPN + Duo
-As of July 15 2018, all VPN endpoints require Duo. Our Duo implementation for the VPN is a little bit non-standard and there are a few thigns that you need to know:
-
-1. Duo Push is the only method that we support for VPN therefore you must have the Duo app installed and activated. 
-2. Duo is only required once every 24 hours for each site you connect to as long as you are connecting from the same IP.
-3. Viscosity has no mechanism to tell you that you need to answer a Duo prompt, so its best ot have your mobie device handy when VPNing. 
-4. If you fail to answer the Duo prompt within 1 minute of connecting, the VPN server will forcably disconnect you. For viscosity users, this will appear as an "Authentication Failed" message. 
-
+1.  Try to connect!  It should work now!
 
 ## Updating
 
@@ -126,13 +62,6 @@ Someone from the Ops team will help you as soon as they can!
 
     make uninstall
 
-## Have access to stafftools?
-
-Unless you are a supportocat, you are required to [use the VPN connection to access stafftools](https://github.com/devtools/features/require_restricted_front_end). Having stafftools exposed on the internet is [something we are actively looking to change](https://github.com/github/github/issues/38109). **note** this change will:
-
-1. Require you to access stafftools via https://admin.github.com/stafftools. https://github.com/stafftools will redirect you to https://admin.github.com/stafftools.
-1. Require you to connect to the production VPN to access https://admin.github.com/stafftools
-
 ## Running Windows?
 
 Bless your heart! You're going to need to download and install a few things:
@@ -146,8 +75,7 @@ Bless your heart! You're going to need to download and install a few things:
  * Change their file extension to `.ovpn` and move them inside the
    OpenVPN config directory (\Program Files\OpenVPN\Config), ie `C:\Program Files\OpenVPN\Config\github-iad-prod.ovpn`. PROTIP: You may need to configure windows to 'Show extensions of known files' to properly rename the file. If this was done correctly, its icon should change to resemble
  * Run `.vpn me` in Chat
- * ~~Use WinSCP to connect to `bastion.githubapp.com` and download `vpn-credentials.p12` into the OpenVPN config directory~~ This is really dificult for windows users at the moment and we are awfully sorry about that. You'll need to ssh to `bastion.githubapp.com` and then to `shell.service.cp1-iad.github.net`. Once on `shell`, `vpn-credentials.p12` will be in your home directory. You'll probably need to `cat vpn-credentials.p12` and then copy/paste it into a file named `pkcs.p12` on your machine. If you run into problems, feel free to swing by #security-ops-eng and we'll help you out. We're working to make this better!
- * Download the CA certificate from [github/puppet](https://github.com/github/puppet/blob/7475edc21fec64ff82f33c2e8f30d1873d676a23/modules/github/files/etc/ssl/ca_crt) into the same folder
+ * Use WinSCP to connect to `vault-bastion.githubapp.com` and download `vpn-credentials.p12` into the OpenVPN config directory.
 
 ### Run
  * Start OpenVPN GUI **in administrator mode** (ie right click the menu item, and select "Run as Administrator")
@@ -162,7 +90,3 @@ called "Add a new TAP virtual ethernet adapter".
 ## For Ops.
 
 The certificates are generated on `shell.service.cp1-iad.github.net`. Check `/data/vpn-ca` and the [github/vpn-ca](https://github.com/github/vpn-ca) repo for more info about the CA store.
-
-For production access, people will need to be configured in `hieradata/common.yaml` . Check `github::staff::vpn` entry in [ops_vpn.pp](https://github.com/github/puppet/blob/master/modules/github/manifests/role/ops_vpn.pp#L144-147) for the current set.
-
-By default everyone receives enterprise vpn access.
