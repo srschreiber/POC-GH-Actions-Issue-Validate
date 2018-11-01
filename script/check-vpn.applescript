@@ -1,5 +1,5 @@
 try
-	set diff to do shell script "cd " & vpn_checkout_dir & "; sleep 10;  git fetch; git diff origin/master"
+	set diff to do shell script "cd " & vpn_checkout_dir & "; git fetch; git diff origin/master"
 on error the error_message number the error_number
 	display dialog "Error: " & the error_number & ". " & the error_message buttons {"OK"} default button 1
 end try
@@ -20,8 +20,6 @@ if button_results is "I'll do that!" then
 else
 	
 end if
-
--- do shell script "export PASS=''; IFS=$'\\n'; for f in `find ~/Library/Application\\ Support/Viscosity/OpenVPN/ -name *.p12 -type f`; do echo $f; openssl pkcs12 -in $f -nokeys -passin env:PASS 2> /dev/null | openssl x509 -noout -checkend 25200; ret=$?; echo $ret; done"
 
 try
 	do shell script "export PASS=''; IFS=$'\\n'; for f in `find ~/Library/Application\\ Support/Viscosity/OpenVPN/ -name *.p12 -type f`; do echo $f; openssl pkcs12 -in $f -nokeys -passin env:PASS 2> /dev/null | openssl x509 -noout -checkend 25200; ret=$?; if [[ $ret -ne 0 ]]; then exit $ret; fi; done"
