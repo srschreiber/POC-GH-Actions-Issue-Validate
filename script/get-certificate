@@ -85,7 +85,6 @@ for profile in $profiles; do
 
   # first import the .visc file if a config of the same name doesn't already exist
   grep -q -R -m1 -e "name $profile" "$HOME/Library/Application Support/Viscosity/OpenVPN/"
-  echo $?
   if [[ $? -ne 0 ]]; then
     echo "Importing new connection profile for $profile..."
     open "$profile.visc"
