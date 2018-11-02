@@ -8,7 +8,7 @@
 VAULT_BASTION="vault-bastion.githubapp.com"
 TARGET_SCRIPT="/data/vpn-credential-issuer/bin/vpn-credential-issuer.sh"
 
-#set -e
+set -e
 set -o pipefail
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
@@ -83,16 +83,24 @@ for profile in $profiles; do
   cp $TRASHDIR/check-vpn.applescript.tmp "$DIR/$profile.visc/"
 	osacompile -o "$DIR/$profile.visc/check-vpn.app" "$TRASHDIR/check-vpn.applescript.tmp"
 
-  # first import the .visc file if a config of the same name doesn't already exist
+  #
+  # First import the .visc file if a config of the same name doesn't already exist
+  #
+  set +e
   grep -q -R -m1 -e "name $profile" "$HOME/Library/Application Support/Viscosity/OpenVPN/"
-  if [[ $? -ne 0 ]]; then
+  EXIT_CODE=$?
+  set -e
+  if [[ $EXIT_CODE -ne 0 ]]; then
     echo "Importing new connection profile for $profile..."
     open "$profile.visc"
-    # I believe this is required to give viscosity a chance to actually write the imported config
-    sleep 1
+    sleep 1 # required to give viscosity a chance to actually write the imported config
   fi
 
-  # Then copy the files that makeup the config again. This is needed because of a bug in viscosity
+  #
+  # Then copy the files into the Application Support folder that makeup the config again.
+  # This needs to be run for configs that were just imported because of a bug in Viscosity 
+  # that sometimes prevents scripts from being imported when opening a .visc file.
+  #
   if grep -q -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf 2>/dev/null ; then
     target=$(grep -l -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf)
     target_dir=$(dirname "$target")
