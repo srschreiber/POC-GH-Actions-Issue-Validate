@@ -10,7 +10,7 @@ if diff is not "" then
 Please open a terminal:
 	cd " & vpn_checkout_dir & "
 	git pull
-	make" buttons {"I'll do that!", "Connect anyway"} default button 1
+	make configure-viscosity" buttons {"I'll do that!", "Connect anyway"} default button 1
 	set button_results to button returned of the result
 end if
 
