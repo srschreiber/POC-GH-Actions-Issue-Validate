@@ -36,9 +36,10 @@ if [ -z "${GITHUB_PASSWORD}" ]; then
 fi
 
 #
-# Call the VPN credential issuer script on the remote host. This returns two lines:
-# 1. Comma-separated list of VPNs for which the user is authorized
-# 2. Base64-encoded PKCS12 certificate container
+# Call the VPN credential issuer script on the remote host. Upon success this returns three lines:
+# 1. A header indicating that the output was successful and an API version
+# 2. Comma-separated list of VPNs for which the user is authorized
+# 3. Base64-encoded PKCS12 certificate container
 #
 
 echo ""
@@ -46,8 +47,17 @@ echo "Please be prepared for 2 Duo pushes (one from the bastion and one from Vau
 echo ""
 
 echo "${GITHUB_PASSWORD}" | ssh "$VAULT_BASTION" "env VAULT_NONINTERACTIVE='true' \"$TARGET_SCRIPT\"" > "$TRASHDIR/certificate.raw"
-profiles=$(head -1 "$TRASHDIR/certificate.raw" | tr "," " ")
-cat "$TRASHDIR/certificate.raw" | tail -1 | base64 --decode > "$TRASHDIR/vpn.pkcs12"
+api_string=$(cat "$TRASHDIR/certificate.raw" | sed "1q;d")
+
+if [ "$api_string" == "vpn-credential-issuer API v1.0" ]; then
+  profiles=$(cat "$TRASHDIR/certificate.raw" | sed "2q;d" | tr "," " ")
+  cat "$TRASHDIR/certificate.raw" | tail -1 | base64 --decode > "$TRASHDIR/vpn.pkcs12"
+else
+  echo ""
+  echo "vpn-credential-issuer failed with unexpected results!"
+  cat "$TRASHDIR/certificate.raw"
+  exit 1
+fi
 
 #
 # If viscosity is not installed here, we really don't know what to do. Dump a copy of the
@@ -98,7 +108,7 @@ for profile in $profiles; do
 
   #
   # Then copy the files into the Application Support folder that makeup the config again.
-  # This needs to be run for configs that were just imported because of a bug in Viscosity 
+  # This needs to be run for configs that were just imported because of a bug in Viscosity
   # that sometimes prevents scripts from being imported when opening a .visc file.
   #
   if grep -q -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf 2>/dev/null ; then
