@@ -120,11 +120,15 @@ for profile in $profiles; do
 		rm -rf "$target_dir/check-vpn.app"
 		cp -r "$DIR/$profile.visc/check-vpn.app" "$target_dir/check-vpn.app"
   fi
-
 done
 
-osascript -e "tell application \"Viscosity\" to quit \"$profile\"" || true
+for profile in $profiles; do
+  osascript -e "tell application \"Viscosity\" to quit \"$profile\"" || true
+done
+
 sleep 1
-pkill -u $UID Viscosity
+if pgrep -u $UID Viscosity >/dev/null; then
+  pkill -u $UID Viscosity
+fi
 sleep 1
 open /Applications/Viscosity.app
