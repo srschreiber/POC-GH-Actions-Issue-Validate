@@ -86,10 +86,8 @@ cat "${DIR}/.profiles" | tr "," "\n" | while read -r profile; do
   fi
 done
 
-
 echo ""
 echo "Restarting viscosity..."
-
 osascript -e "tell application \"Viscosity\" to quit" || true
 sleep 1
 if pgrep -u $UID Viscosity >/dev/null; then
