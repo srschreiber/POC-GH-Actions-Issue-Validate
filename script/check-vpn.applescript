@@ -14,11 +14,11 @@ Please open a terminal:
 		set button_results to button returned of the result
 		if button_results is "I'll do that!" then
 			tell application "Viscosity" to disconnectall
-			return
 		end if
 	else
 		display dialog "Error: " & the error_number & ". " & the error_message buttons {"OK"} default button 1
 	end if
+  return
 end try
 
 if diff is not "" then
