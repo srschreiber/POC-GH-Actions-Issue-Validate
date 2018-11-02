@@ -7,3 +7,4 @@ ca_crt
 *p12
 KEYS
 *.visc/check-vpn.app
+*.visc/check-vpn.applescript.tmp
