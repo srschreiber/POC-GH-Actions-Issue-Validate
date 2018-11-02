@@ -1,4 +1,3 @@
-set vpn_checkout_dir to "~/dev/vpn1"
 set button_results to ""
 set diff to ""
 
