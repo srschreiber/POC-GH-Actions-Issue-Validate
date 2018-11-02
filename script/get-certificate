@@ -90,18 +90,17 @@ for profile in $profiles; do
 
   echo "set vpn_checkout_dir to \"$DIR\"" > "$TRASHDIR/check-vpn.applescript.tmp"
 	cat "$DIR/script/check-vpn.applescript" >> "$TRASHDIR/check-vpn.applescript.tmp"
-  cp $TRASHDIR/check-vpn.applescript.tmp "$DIR/$profile.visc/"
+  cp "$TRASHDIR/check-vpn.applescript.tmp" "$DIR/$profile.visc/"
 	osacompile -o "$DIR/$profile.visc/check-vpn.app" "$TRASHDIR/check-vpn.applescript.tmp"
 
   #
   # First import the .visc file if a config of the same name doesn't already exist
   #
-  set +e
-  grep -q -R -m1 -e "name $profile" "$HOME/Library/Application Support/Viscosity/OpenVPN/"
-  EXIT_CODE=$?
-  set -e
-  if [[ $EXIT_CODE -ne 0 ]]; then
+  if grep -q -R -m1 -e "name $profile" "$HOME/Library/Application Support/Viscosity/OpenVPN/"; then
+    :
+  else
     echo "Importing new connection profile for $profile..."
+    cd "$DIR"
     open "$profile.visc"
     sleep 1 # required to give viscosity a chance to actually write the imported config
   fi
