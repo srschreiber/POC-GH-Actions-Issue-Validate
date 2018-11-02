@@ -11,7 +11,7 @@ elif [ $REMOTE = $BASE ]; then
   echo "It looks like your local repo contains changes. That's fine! Please remember to merge in the master branch."
   exit 0
 elif [ $LOCAL = $BASE ]; then
-  echo "It looks like your local repo is out of date. Please run 'git pull' and then run 'make viscosity' again!"
+  echo "It looks like your local repo is out of date. Please run 'git pull' and then run 'make' again!"
   exit 1
 else
   echo "Somehow you've diverged from the origin master branch. Please fix this up and try again."
