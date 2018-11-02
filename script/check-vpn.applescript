@@ -1,24 +1,23 @@
 try
-	set diff to do shell script "cd " & vpn_checkout_dir & "; git fetch; git diff origin/master"
+	set diff to do shell script "cd " & vpn_checkout_dir & "; script/up-to-date-for-applescript"
 on error the error_message number the error_number
 	display dialog "Error: " & the error_number & ". " & the error_message buttons {"OK"} default button 1
 end try
 
 if diff is not "" then
 	display dialog "Your VPN config is out of date!
-	
+
 Please open a terminal:
 	cd " & vpn_checkout_dir & "
 	git pull
-	make && make install" buttons {"I'll do that!", "Connect anyway"} default button 1
+	make" buttons {"I'll do that!", "Connect anyway"} default button 1
 	set button_results to button returned of the result
 end if
-
 
 if button_results is "I'll do that!" then
 	tell application "Viscosity" to disconnectall
 else
-	
+
 end if
 
 try

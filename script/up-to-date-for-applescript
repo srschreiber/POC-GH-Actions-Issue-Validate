@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Expectations:
+# - Repo up to date: Print nothing, exit 0
+# - Repo not up to date: Print something, exit 0
+# - Failure: Print an error message, exit != 0
+
+set -e
+set -o pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+cd "$DIR"
+git fetch --all >/dev/null 2>&1
+LOCAL=$(git rev-parse HEAD)
+REMOTE=$(git rev-parse "@{upstream}" 2>/dev/null || echo "none")
+BASE=$(git merge-base HEAD "@{upstream}" 2>/dev/null || echo "none")
+
+if [ "$LOCAL" == "$REMOTE" ]; then
+  exit 0
+elif [ "$REMOTE" == "$BASE" ]; then
+  # Local repo contains changes. That's fine!
+  exit 0
+elif [ "$LOCAL" == "$BASE" ]; then
+  echo "It looks like your local repo is out of date. Please run 'git pull' and then run 'make viscosity' again!"
+  exit 1
+else
+  echo "Somehow you've diverged from the origin master branch. Please fix this up and try again."
+  exit 1
+fi
