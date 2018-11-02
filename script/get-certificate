@@ -50,85 +50,12 @@ echo "${GITHUB_PASSWORD}" | ssh "$VAULT_BASTION" "env VAULT_NONINTERACTIVE='true
 api_string=$(cat "$TRASHDIR/certificate.raw" | sed "1q;d")
 
 if [ "$api_string" == "vpn-credential-issuer API v1.0" ]; then
-  profiles=$(cat "$TRASHDIR/certificate.raw" | sed "2q;d" | tr "," " ")
-  cat "$TRASHDIR/certificate.raw" | tail -1 | base64 --decode > "$TRASHDIR/vpn.pkcs12"
+  cat "$TRASHDIR/certificate.raw" | sed "2q;d" > "${DIR}/.profiles"
+  cat "$TRASHDIR/certificate.raw" | tail -1 | base64 --decode > "${DIR}/pkcs.p12"
+  exit 0
 else
   echo ""
   echo "vpn-credential-issuer failed with unexpected results!"
   cat "$TRASHDIR/certificate.raw"
   exit 1
 fi
-
-#
-# If viscosity is not installed here, we really don't know what to do. Dump a copy of the
-# pkcs12 certificate into the user's checkout of `github/vpn` and then call it a day.
-#
-
-if [ ! -d "/Applications/Viscosity.app" ]; then
-  cp "$TRASHDIR/vpn.pkcs12" "$DIR/pkcs.p12"
-  echo ""
-  echo "Viscosity does not seem to be installed on this system, or this system is something"
-  echo "other than the standard company issue developer Mac. I've put the certificate in"
-  echo "$DIR/pkcs.p12"
-  echo ""
-  echo "You'll need to configure your VPN client accordingly."
-  exit 0
-fi
-
-#
-# Import each authorized connection
-#
-
-for profile in $profiles; do
-  echo ""
-
-  if [ ! -d "$DIR/$profile.visc" ]; then
-    echo "Warning: You are authorized for profile ${profile} but no template configuration exists." 1>&2
-    echo "Installation of ${profile} is being skipped. Please report this to #security-ops-eng." 1>&2
-    continue
-  fi
-
-  echo "set vpn_checkout_dir to \"$DIR\"" > "$TRASHDIR/check-vpn.applescript.tmp"
-	cat "$DIR/script/check-vpn.applescript" >> "$TRASHDIR/check-vpn.applescript.tmp"
-  cp "$TRASHDIR/check-vpn.applescript.tmp" "$DIR/$profile.visc/"
-	osacompile -o "$DIR/$profile.visc/check-vpn.app" "$TRASHDIR/check-vpn.applescript.tmp"
-
-  #
-  # First import the .visc file if a config of the same name doesn't already exist
-  #
-  if grep -q -R -m1 -e "name $profile" "$HOME/Library/Application Support/Viscosity/OpenVPN/"; then
-    :
-  else
-    echo "Importing new connection profile for $profile..."
-    cd "$DIR"
-    open "$profile.visc"
-    sleep 1 # required to give viscosity a chance to actually write the imported config
-  fi
-
-  #
-  # Then copy the files into the Application Support folder that makeup the config again.
-  # This needs to be run for configs that were just imported because of a bug in Viscosity
-  # that sometimes prevents scripts from being imported when opening a .visc file.
-  #
-  if grep -q -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf 2>/dev/null ; then
-    target=$(grep -l -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf)
-    target_dir=$(dirname "$target")
-
-    echo "Updating connection profile for $profile..."
-    cp -f "$DIR/$profile.visc/config.conf" "$target_dir/config.conf"
-		cp -f "$TRASHDIR/vpn.pkcs12" "$target_dir/pkcs.p12"
-		rm -rf "$target_dir/check-vpn.app"
-		cp -r "$DIR/$profile.visc/check-vpn.app" "$target_dir/check-vpn.app"
-  fi
-done
-
-for profile in $profiles; do
-  osascript -e "tell application \"Viscosity\" to quit \"$profile\"" || true
-done
-
-sleep 1
-if pgrep -u $UID Viscosity >/dev/null; then
-  pkill -u $UID Viscosity
-fi
-sleep 1
-open /Applications/Viscosity.app

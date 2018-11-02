@@ -5,7 +5,7 @@ install: viscosity
 viscosity:
 	@$(MAKE) -j1 safe-viscosity
 
-safe-viscosity: up-to-date preflight certificate clean start
+safe-viscosity: up-to-date preflight certificate configure-viscosity clean start
 
 up-to-date:
 	@echo "Verifying the local repo is up to date..."
@@ -16,6 +16,9 @@ check:
 
 preflight:
 	@./script/install-viscosity
+
+configure-viscosity:
+	@./script/configure-viscosity
 
 import-prod:
 	@echo "VPN certificate issuance now imports all connections to which you are entitled.\n"
