@@ -54,3 +54,8 @@ pkcs.p12:
 start:
 	@echo "Starting Viscosity..."
 	@/usr/bin/open /Applications/Viscosity.app/
+
+linux: up-to-date certificate unsupported
+
+unsupported:
+	@./script/unsupported
