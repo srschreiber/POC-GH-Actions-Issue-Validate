@@ -59,9 +59,9 @@ cat "${DIR}/.profiles" | tr "," "\n" | while read -r profile; do
   fi
 
   echo "set vpn_checkout_dir to \"$DIR\"" > "$TRASHDIR/check-vpn.applescript.tmp"
-	cat "$DIR/script/check-vpn.applescript" >> "$TRASHDIR/check-vpn.applescript.tmp"
+  cat "$DIR/script/check-vpn.applescript" >> "$TRASHDIR/check-vpn.applescript.tmp"
   cp "$TRASHDIR/check-vpn.applescript.tmp" "$DIR/$profile.visc/"
-	osacompile -o "$DIR/$profile.visc/check-vpn.app" "$TRASHDIR/check-vpn.applescript.tmp"
+  osacompile -o "$DIR/$profile.visc/check-vpn.app" "$TRASHDIR/check-vpn.applescript.tmp"
 
   #
   # First import the .visc file if a config of the same name doesn't already exist
@@ -87,10 +87,10 @@ cat "${DIR}/.profiles" | tr "," "\n" | while read -r profile; do
     echo "Updating connection profile for $profile..."
     cp -f "$DIR/$profile.visc/config.conf" "$target_dir/config.conf"
     if [ -f "$DIR/pkcs.p12" ]; then
-	    cp -f "$DIR/pkcs.p12" "$target_dir/pkcs.p12"
+      cp -f "$DIR/pkcs.p12" "$target_dir/pkcs.p12"
     fi
-		rm -rf "$target_dir/check-vpn.app"
-		cp -r "$DIR/$profile.visc/check-vpn.app" "$target_dir/check-vpn.app"
+    rm -rf "$target_dir/check-vpn.app"
+    cp -r "$DIR/$profile.visc/check-vpn.app" "$target_dir/check-vpn.app"
   fi
 done
 
