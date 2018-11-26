@@ -10,9 +10,15 @@ set -o pipefail
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
 if [ ! -f "$DIR/pkcs.p12" ]; then
-  echo "ERROR: Missing VPN certificate."
-  echo "Please run 'make certificate' to obtain your VPN certificate before attempting to configure Viscosity."
-  exit 255
+  # If there are valid certificates in the configured directories, then don't complain.
+  # We'll just re-use those.
+  if "$DIR/script/check-certificate-validity" 1 >/dev/null 2>&1; then
+    :
+  else
+    echo "ERROR: Missing or expired VPN certificate."
+    echo "Please run 'make certificate' to obtain your VPN certificate before attempting to configure Viscosity."
+    exit 255
+  fi
 fi
 
 if [ ! -f "$DIR/.profiles" ]; then
@@ -80,7 +86,9 @@ cat "${DIR}/.profiles" | tr "," "\n" | while read -r profile; do
 
     echo "Updating connection profile for $profile..."
     cp -f "$DIR/$profile.visc/config.conf" "$target_dir/config.conf"
-		cp -f "$DIR/pkcs.p12" "$target_dir/pkcs.p12"
+    if [ -f "$DIR/pkcs.p12" ]; then
+	    cp -f "$DIR/pkcs.p12" "$target_dir/pkcs.p12"
+    fi
 		rm -rf "$target_dir/check-vpn.app"
 		cp -r "$DIR/$profile.visc/check-vpn.app" "$target_dir/check-vpn.app"
   fi
