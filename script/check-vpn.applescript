@@ -26,7 +26,8 @@ if diff is not "" then
 
 Please open a terminal:
   cd " & vpn_checkout_dir & "
-  make" buttons {"I'll do that!", "Connect anyway"} default button 1
+  git pull
+	make configure-viscosity" buttons {"I'll do that!", "Connect anyway"} default button 1
 	set button_results to button returned of the result
 	if button_results is "I'll do that!" then
 		tell application "Viscosity" to disconnectall
@@ -43,7 +44,7 @@ on error the error_message number the error_number
 Please open a terminal:
   cd " & vpn_checkout_dir & "
   make" buttons {"I'll do that!", "Connect anyway"} default button 1
-	
+
 	if button_results is "I'll do that!" then
 		tell application "Viscosity" to disconnectall
 		return
