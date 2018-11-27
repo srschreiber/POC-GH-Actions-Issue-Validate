@@ -10,9 +10,15 @@ set -o pipefail
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
 if [ ! -f "$DIR/pkcs.p12" ]; then
-  echo "ERROR: Missing VPN certificate."
-  echo "Please run 'make certificate' to obtain your VPN certificate before attempting to configure Viscosity."
-  exit 255
+  # If there are valid certificates in the configured directories, then don't complain.
+  # We'll just re-use those.
+  if "$DIR/script/check-certificate-validity" 1 >/dev/null 2>&1; then
+    :
+  else
+    echo "ERROR: Missing or expired VPN certificate."
+    echo "Please run 'make certificate' to obtain your VPN certificate before attempting to configure Viscosity."
+    exit 255
+  fi
 fi
 
 if [ ! -f "$DIR/.profiles" ]; then
@@ -34,6 +40,22 @@ if [ ! -d "/Applications/Viscosity.app" ]; then
 fi
 
 #
+# Stop viscosity - it needs to be shut down when updating existing connections.
+#
+
+stop_viscosity() {
+  echo "Stopping viscosity..."
+  osascript -e "tell application \"Viscosity\" to quit" || true
+  sleep 1
+  if pgrep -u $UID Viscosity >/dev/null; then
+    pkill -u $UID Viscosity
+  fi
+  sleep 1
+}
+
+stop_viscosity
+
+#
 # Import each authorized connection
 #
 
@@ -43,9 +65,17 @@ cleanup() {
 }
 trap cleanup EXIT
 
-cat "${DIR}/.profiles" | tr "," "\n" | while read -r profile; do
-  echo ""
+# Pass 1:
+# - If a profile is missing, warn and skip
+# - Compile the applescript
+# - Determine if there is an existing viscosity profile
 
+import_profiles=""
+update_profiles=""
+all_profiles=$(cat "${DIR}/.profiles" | tr "," "\n")
+for profile in $all_profiles; do
+  echo ""
+  echo "Pre-processing ${profile}"
   if [ ! -d "$DIR/$profile.visc" ]; then
     echo "Warning: You are authorized for profile ${profile} but no template configuration exists." 1>&2
     echo "Installation of ${profile} is being skipped. Please report this to #security-ops-eng." 1>&2
@@ -53,45 +83,74 @@ cat "${DIR}/.profiles" | tr "," "\n" | while read -r profile; do
   fi
 
   echo "set vpn_checkout_dir to \"$DIR\"" > "$TRASHDIR/check-vpn.applescript.tmp"
-	cat "$DIR/script/check-vpn.applescript" >> "$TRASHDIR/check-vpn.applescript.tmp"
+  cat "$DIR/script/check-vpn.applescript" >> "$TRASHDIR/check-vpn.applescript.tmp"
   cp "$TRASHDIR/check-vpn.applescript.tmp" "$DIR/$profile.visc/"
-	osacompile -o "$DIR/$profile.visc/check-vpn.app" "$TRASHDIR/check-vpn.applescript.tmp"
+  osacompile -o "$DIR/$profile.visc/check-vpn.app" "$TRASHDIR/check-vpn.applescript.tmp"
 
-  #
-  # First import the .visc file if a config of the same name doesn't already exist
-  #
+  # Determine if there's an existing profile.
   if grep -q -R -m1 -e "name $profile" "$HOME/Library/Application Support/Viscosity/OpenVPN/"; then
-    :
+    update_profiles="${update_profiles} ${profile}"
   else
-    echo "Importing new connection profile for $profile..."
-    cd "$DIR"
-    open "$profile.visc"
-    sleep 1 # required to give viscosity a chance to actually write the imported config
+    import_profiles="${import_profiles} ${profile}"
   fi
+done
 
-  #
-  # Then copy the files into the Application Support folder that makeup the config again.
-  # This needs to be run for configs that were just imported because of a bug in Viscosity
-  # that sometimes prevents scripts from being imported when opening a .visc file.
-  #
+# Pass 2: Update any existing profiles. This has to happen with viscosity closed or the
+# updates won't register correctly.
+update_profile() {
+  local profile="$1"
+
   if grep -q -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf 2>/dev/null ; then
     target=$(grep -l -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf)
     target_dir=$(dirname "$target")
 
+    echo ""
     echo "Updating connection profile for $profile..."
     cp -f "$DIR/$profile.visc/config.conf" "$target_dir/config.conf"
-		cp -f "$DIR/pkcs.p12" "$target_dir/pkcs.p12"
-		rm -rf "$target_dir/check-vpn.app"
-		cp -r "$DIR/$profile.visc/check-vpn.app" "$target_dir/check-vpn.app"
+    if [ -f "$DIR/pkcs.p12" ]; then
+      cp -f "$DIR/pkcs.p12" "$target_dir/pkcs.p12"
+    fi
+    rm -rf "$target_dir/check-vpn.app"
+    cp -r "$DIR/$profile.visc/check-vpn.app" "$target_dir/check-vpn.app"
   fi
+}
+
+for profile in $update_profiles; do
+  update_profile "$profile"
 done
 
-echo ""
-echo "Restarting viscosity..."
-osascript -e "tell application \"Viscosity\" to quit" || true
-sleep 1
-if pgrep -u $UID Viscosity >/dev/null; then
-  pkill -u $UID Viscosity
+# Pass 3: Import any new profiles. This actually opens Viscosity to run through the import
+# process.
+if [ -n "$import_profiles" ]; then
+  echo ""
+  echo "*** You may be prompted to keep scripts or remove scripts. ***"
+  echo "*** Choose \"Keep Scripts\" at all dialogs. ***"
+
+  for profile in $import_profiles; do
+    echo ""
+    echo "Importing new connection profile for $profile..."
+    cd "$DIR"
+    open "$profile.visc"
+    sleep 1 # required to give viscosity a chance to actually write the imported config
+  done
+
+  echo ""
+  echo "Viscosity must be restarted to complete the configuration. Once you have"
+  echo "clicked 'Keep Scripts' and dismissed all dialogs, hit Enter, and I will"
+  echo "finish configuring Viscosity for you."
+  echo ""
+  echo "Hit Enter when ready..."
+  read -r
+
+  stop_viscosity
+  for profile in $import_profiles; do
+    update_profile "$profile"
+  done
 fi
-sleep 1
+
+echo ""
+echo "Congratulations, your connections have been imported/updated."
+echo ""
+echo "Starting Viscosity..."
+echo ""
 open /Applications/Viscosity.app
