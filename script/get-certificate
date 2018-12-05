@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# This script interacts with the vault-based certificate authority to issue a new
+# certificate for the user (private key and public key) which never touches the disk
+# on a shared server. Retrieve the list of VPNs for which the user is entitled and
+# install the configurations and certificate there.
+
+VAULT_BASTION="vault-bastion.githubapp.com"
+TARGET_SCRIPT="/data/vpn-credential-issuer/bin/vpn-credential-issuer.sh"
+
+set -e
+set -o pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+TRASHDIR=$(mktemp -d /tmp/get-certificate.XXXXXXXXXXXXX)
+cleanup() {
+  rm -rf "$TRASHDIR"
+}
+trap cleanup EXIT
+
+#
+# We will pass the dotcom password to the script via STDIN.
+#
+
+echo ""
+echo "-------------------------------------------------------"
+echo "Requesting VPN certificate from Vault via vault-bastion"
+echo "-------------------------------------------------------"
+echo ""
+
+if [ -z "${GITHUB_PASSWORD}" ]; then
+   read -r -s -p "github.com password: " GITHUB_PASSWORD
+   echo
+   echo "{GITHUB_PASSWORD}" | grep -q "^$" && unset GITHUB_PASSWORD
+   export GITHUB_PASSWORD
+fi
+
+#
+# Call the VPN credential issuer script on the remote host. Upon success this returns three lines:
+# 1. A header indicating that the output was successful and an API version
+# 2. Comma-separated list of VPNs for which the user is authorized
+# 3. Base64-encoded PKCS12 certificate container
+#
+
+echo ""
+echo "Please be prepared for 2 Duo pushes (one from the bastion and one from Vault)!"
+echo ""
+
+echo "${GITHUB_PASSWORD}" | ssh "$VAULT_BASTION" "env VAULT_NONINTERACTIVE='true' \"$TARGET_SCRIPT\"" > "$TRASHDIR/certificate.raw"
+api_string=$(cat "$TRASHDIR/certificate.raw" | sed "1q;d")
+
+if [ "$api_string" == "vpn-credential-issuer API v1.0" ]; then
+  cat "$TRASHDIR/certificate.raw" | sed "2q;d" > "${DIR}/.profiles"
+  cat "$TRASHDIR/certificate.raw" | tail -1 | base64 --decode > "${DIR}/pkcs.p12"
+  exit 0
+else
+  echo ""
+  echo "vpn-credential-issuer failed with unexpected results!"
+  cat "$TRASHDIR/certificate.raw"
+  exit 1
+fi

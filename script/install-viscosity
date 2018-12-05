@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ -d "/Applications/Viscosity.app" ]; then
+  echo "Viscosity appears to be installed already."
+  exit 0
+fi
+
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+cd "$DIR"
+
+echo "Installing viscosity with homebrew..."
+brew uninstall --force brew-cask
+brew bundle check >/dev/null || brew bundle
+brew cask uninstall --force viscosity
+brew update
+brew bundle
+open "/Applications/Viscosity.app/"

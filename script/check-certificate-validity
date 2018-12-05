@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+TRASHDIR=$(mktemp -d /tmp/get-certificate.XXXXXXXXXXXXX)
+cleanup() {
+  rm -rf "$TRASHDIR"
+}
+trap cleanup EXIT
+
+export PASS=''
+find "$HOME/Library/Application Support/Viscosity/OpenVPN" -name *.p12 -type f | while read -r f; do
+  openssl pkcs12 -in "$f" -nokeys -clcerts -passin env:PASS >"$TRASHDIR/certificate.crt"
+  openssl x509 -in "$TRASHDIR/certificate.crt" -noout -text
+  if openssl x509 -in "$TRASHDIR/certificate.crt" -noout -checkend $1; then continue; fi
+  echo "Certificate ${f} expires soon."
+  exit 1
+done
+
+exit 0

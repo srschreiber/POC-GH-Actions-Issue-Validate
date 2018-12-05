@@ -15,9 +15,9 @@ All VPN endpoints require Duo. Our Duo implementation for the VPN is a little bi
 
 ### If something goes wrong during Setup - Try These Steps
 
+1. Uninstall Viscosity if it was previously installed
 1. Clone this repo into ~/github
-1. Run `.vpn me` in chat
-1. scp the pkcs.p12 file by running the following command ```scp vault-bastion.githubapp.com:vpn-credentials.p12 pkcs.p12```
+1. Run `make certificate` -- when Viscosity isn't installed this will drop `pkcs.p12` into this directory
 1. Download Viscosity from https://gear.githubapp.com/apps/
 1. Install Viscosity this will create directory `~/Library/Application Support/Viscosity/OpenVPN`
 1. Navigate to this directory, create folders with names 1 - 7. This is because there are 7 types of connections. Example:
@@ -32,7 +32,7 @@ All VPN endpoints require Duo. Our Duo implementation for the VPN is a little bi
     ```
 1. Now there are 7 folders in the root of this repo (github/vpn) with `config.conf` files. Copy these files (order doesn't matter) into each of the folders you just created.
 
-1. Copy that `pkcs.p12` file you scp'd in step 3 to each of the directories in `~/Library/Application Support/Viscosity/OpenVPN/`  You just replicate this same file in each of these directories.
+1. Copy that `pkcs.p12` file from the `make certificate` step into each of the directories in `~/Library/Application Support/Viscosity/OpenVPN/`  You just replicate this same file in each of these directories.
 
 1.  Open Viscosity (CMD + Space type Viscosity) - a Globe icon will appear in your menubar
 
@@ -48,7 +48,6 @@ by hand.
 
 If you want to blow away your current config and setup things from scratch:
 
-    `.vpn me` in Slack
     make uninstall
     make
 
@@ -67,15 +66,32 @@ Someone from the Ops team will help you as soon as they can!
 Bless your heart! You're going to need to download and install a few things:
 
 * [OpenVPN](http://openvpn.net/index.php/open-source/downloads.html), grabbing the latest Windows installer (64bit if you run 64bit Windows)
-* [WinSCP](http://winscp.net), for downloading your keys
+* [PuTTY](https://www.putty.org), if you don't have an SSH client already
+* [WinSCP](http://winscp.net), for downloading your keys, if you don't have a SCP client already
 
 ### Configure
 
  * Download the Viscosity configuration files you want from this repository, ie `github-iad-prod.visc/config.conf`
  * Change their file extension to `.ovpn` and move them inside the
    OpenVPN config directory (\Program Files\OpenVPN\Config), ie `C:\Program Files\OpenVPN\Config\github-iad-prod.ovpn`. PROTIP: You may need to configure windows to 'Show extensions of known files' to properly rename the file. If this was done correctly, its icon should change to resemble
- * Run `.vpn me` in Chat
+ * SSH to `vault-bastion.githubapp.com` (see https://githubber.com/article/crafts/engineering/production-shell-access for all the specifics around keys and authorization). You'll need to accept a Duo push to log in. Once you're logged in run these commands in the order shown and make sure that the output looks similar:
+
+      ```
+      bob@vault-bastion-a642f4f.vpc-us-east-1(prd) ~ $ . vault-login
+      Hello, bob.
+      github.com password:
+      Please check your device for a Duo push to complete your login.
+      Login succeeded. VAULT_TOKEN has been set in your environment.
+      Successfully authenticated. Your vault token has been set in the environment.
+
+      bob@vault-bastion-a642f4f.vpc-us-east-1(prd) ~ $ /data/vpn-credential-issuer/bin/vpn-credential-issuer.sh | tail -1 | base64 -d > ~/vpn-credentials.p12
+
+      bob@vault-bastion-a642f4f.vpc-us-east-1(prd) ~ $ ls -l ~/vpn-credentials.p12
+      -rw-r--r-- 1 bob users 7922 Nov  1 08:35 /home/bob/vpn-credentials.p12
+      ```
+
  * Use WinSCP to connect to `vault-bastion.githubapp.com` and download `vpn-credentials.p12` into the OpenVPN config directory.
+ * Delete `vpn-credentials.p12` off the server, because :lock:.
 
 ### Run
  * Start OpenVPN GUI **in administrator mode** (ie right click the menu item, and select "Run as Administrator")
@@ -86,7 +102,3 @@ Bless your heart! You're going to need to download and install a few things:
 OpenVPN will only add one TAP device initially. You need one TAP for each
 _concurrent_ VPN connection. If you need more there's a start menu entry
 called "Add a new TAP virtual ethernet adapter".
-
-## For Ops.
-
-The certificates are generated on `shell.service.cp1-iad.github.net`. Check `/data/vpn-ca` and the [github/vpn-ca](https://github.com/github/vpn-ca) repo for more info about the CA store.
