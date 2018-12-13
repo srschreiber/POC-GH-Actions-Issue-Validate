@@ -26,6 +26,13 @@ cleanup() {
 }
 trap cleanup EXIT
 
+# Newer version of `git` may be in /usr/local/bin per standard GitHub workstation
+# setup. Adjusting the path here lets us find `git` there, in preference to system
+# git, if present.
+if [ -x "/usr/local/bin/git" ]; then
+  export PATH="/usr/local/bin:$PATH"
+fi
+
 cd "$DIR"
 if git fetch --all >"$TRASHDIR/git-fetch-all.out" 2>&1; then
   # All is well, keep going.
