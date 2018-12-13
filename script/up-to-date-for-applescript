@@ -20,8 +20,24 @@ if [ -f "$DIR/applescript.debug" ]; then
   set -x
 fi
 
+TRASHDIR=$(mktemp -d /tmp/up-to-date-for-applescript.XXXXXXXXXXXXX)
+cleanup() {
+  rm -rf "$TRASHDIR"
+}
+trap cleanup EXIT
+
 cd "$DIR"
-git fetch --all >/dev/null 2>&1
+if git fetch --all >"$TRASHDIR/git-fetch-all.out" 2>&1; then
+  # All is well, keep going.
+  :
+else
+  echo "WARNING: Fetching the latest information for 'github/vpn' from GitHub failed!"
+  echo "I cannot determine if your repository checkout is up-to-date or not."
+  echo "The output from the git command is saved in: $DIR/git-fetch-all.out"
+  cp -f "$TRASHDIR/git-fetch-all.out" "$DIR/git-fetch-all.out"
+  exit 1
+fi
+
 LOCAL=$(git rev-parse HEAD)
 REMOTE=$(git rev-parse "@{upstream}" 2>/dev/null || echo "none")
 BASE=$(git merge-base HEAD "@{upstream}" 2>/dev/null || echo "none")
