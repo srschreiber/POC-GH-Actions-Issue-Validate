@@ -57,7 +57,7 @@ on error the error_message number the error_number
   display dialog "Warning: You have VPN certificates installed that will be expiring in fewer than 7 days.
 
 If you wish to renew them before expiration:
-  run the chat-op \".vpn-new revoke\"
+  run the chat-op \".vpn revoke\"
   cd " & vpn_checkout_dir & "
   make" buttons {"OK"} default button 1
 end try
