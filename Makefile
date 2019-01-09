@@ -1,9 +1,14 @@
-.PHONY: viscosity up-to-date preflight certificate import import-prod import-mgmt start
+.PHONY: install-viscosity up-to-date preflight certificate import import-prod import-mgmt start
 
-
-install: viscosity
+install: install-viscosity
 
 viscosity:
+	@echo "To install and configure viscosity for the first time, run 'make install-viscosity'.\n"
+	@echo "If viscosity is installed and you want to reconfigure it, run 'make configure-viscosity'.\n"
+	@echo "Please update whichever document told you to run 'make viscosity'.\n"
+	@exit 1
+
+install-viscosity:
 	@$(MAKE) -j1 safe-viscosity
 
 safe-viscosity: up-to-date preflight certificate configure-viscosity clean start

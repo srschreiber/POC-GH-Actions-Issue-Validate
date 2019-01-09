@@ -2,6 +2,18 @@
 
 set -e
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+
+if [ -f "$DIR/applescript.debug" ]; then
+  echo "---- Start $0 at $(date) ----" >> "$DIR/applescript.debug"
+  # https://askubuntu.com/questions/811439/bash-set-x-logs-to-file/1001404#1001404
+  exec   > >(tee -ia "$DIR/applescript.debug")
+  exec  2> >(tee -ia "$DIR/applescript.debug" >& 2)
+  exec 19>> "$DIR/applescript.debug"
+  export BASH_XTRACEFD="19"
+  set -x
+fi
+
 TRASHDIR=$(mktemp -d /tmp/get-certificate.XXXXXXXXXXXXX)
 cleanup() {
   rm -rf "$TRASHDIR"

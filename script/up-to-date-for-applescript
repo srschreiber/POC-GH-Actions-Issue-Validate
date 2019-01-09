@@ -9,8 +9,42 @@ set -e
 set -o pipefail
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+
+if [ -f "$DIR/applescript.debug" ]; then
+  echo "---- Start $0 at $(date) ----" >> "$DIR/applescript.debug"
+  # https://askubuntu.com/questions/811439/bash-set-x-logs-to-file/1001404#1001404
+  exec   > >(tee -ia "$DIR/applescript.debug")
+  exec  2> >(tee -ia "$DIR/applescript.debug" >& 2)
+  exec 19>> "$DIR/applescript.debug"
+  export BASH_XTRACEFD="19"
+  set -x
+fi
+
+TRASHDIR=$(mktemp -d /tmp/up-to-date-for-applescript.XXXXXXXXXXXXX)
+cleanup() {
+  rm -rf "$TRASHDIR"
+}
+trap cleanup EXIT
+
+# Newer version of `git` may be in /usr/local/bin per standard GitHub workstation
+# setup. Adjusting the path here lets us find `git` there, in preference to system
+# git, if present.
+if [ -x "/usr/local/bin/git" ]; then
+  export PATH="/usr/local/bin:$PATH"
+fi
+
 cd "$DIR"
-git fetch --all >/dev/null 2>&1
+if git fetch --all >"$TRASHDIR/git-fetch-all.out" 2>&1; then
+  # All is well, keep going.
+  :
+else
+  echo "WARNING: Fetching the latest information for 'github/vpn' from GitHub failed!"
+  echo "I cannot determine if your repository checkout is up-to-date or not."
+  echo "The output from the git command is saved in: $DIR/git-fetch-all.out"
+  cp -f "$TRASHDIR/git-fetch-all.out" "$DIR/git-fetch-all.out"
+  exit 1
+fi
+
 LOCAL=$(git rev-parse HEAD)
 REMOTE=$(git rev-parse "@{upstream}" 2>/dev/null || echo "none")
 BASE=$(git merge-base HEAD "@{upstream}" 2>/dev/null || echo "none")
