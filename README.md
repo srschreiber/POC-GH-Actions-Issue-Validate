@@ -57,6 +57,8 @@ If you want to blow away your current config and setup things from scratch:
 @github/security-ops.  Please include the logs from any failed connections.
 Someone from the Ops team will help you as soon as they can!
 
+Note: `github-ams-prod` & g`ithub-ams-mgmt` are not yet live, so the profiles will not import.
+
 ## Uninstall
 
     make uninstall
