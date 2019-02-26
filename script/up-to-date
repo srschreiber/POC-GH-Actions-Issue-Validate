@@ -73,14 +73,14 @@ if [ "$branch" == "master" ]; then
 fi
 
 # Grab the `config.version` file from the master branch on the remote server.
-if git show "origin/${branch}:/config.version" >"$TRASHDIR/config.version" 2>"$TRASHDIR/show.log"; then
+if git show "origin/${branch}:config.version" >"$TRASHDIR/config.version" 2>"$TRASHDIR/show.log"; then
   # All is well, we fetched the file.
   :
 else
   echo "WARNING: Fetching the config.version file from GitHub failed!"
   echo "The output from the git command is saved in: $DIR/git-show.out"
   echo "--"
-  echo git show "origin/${branch}:/config.version" > "$DIR/git-show.out"
+  echo git show "origin/${branch}:config.version" > "$DIR/git-show.out"
   cat "$TRASHDIR/config.version" "$TRASHDIR/show.log" >> "$DIR/git-show.out"
   echo "version:99999" > "$TRASHDIR/config.version"
 fi
