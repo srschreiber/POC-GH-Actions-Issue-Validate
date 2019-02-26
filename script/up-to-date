@@ -1,19 +1,99 @@
-#!/bin/sh
+#!/bin/bash
 
-git fetch --all
-LOCAL=$(git rev-parse HEAD)
-REMOTE=$(git rev-parse @{upstream} 2>/dev/null || echo "none")
-BASE=$(git merge-base HEAD @{upstream} 2>/dev/null || echo "none")
+# Expectations from `up-to-date-for-applescript` and general command line use:
+# - Repo up to date: exit 0
+# - Repo not up to date: exit 2
+# - Failure: exit other
 
-if [ $LOCAL = $REMOTE ]; then
-  exit 0
-elif [ $REMOTE = $BASE ]; then
-  echo "It looks like your local repo contains changes. That's fine! Please remember to merge in the master branch."
-  exit 0
-elif [ $LOCAL = $BASE ]; then
-  echo "It looks like your local repo is out of date. Please run 'git pull' and then run 'make configure-viscosity' again!"
-  exit 1
+set -e
+set -o pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+
+if [ -f "$DIR/applescript.debug" ]; then
+  echo "---- Start $0 at $(date) ----" >> "$DIR/applescript.debug"
+  # https://askubuntu.com/questions/811439/bash-set-x-logs-to-file/1001404#1001404
+  exec   > >(tee -ia "$DIR/applescript.debug")
+  exec  2> >(tee -ia "$DIR/applescript.debug" >& 2)
+  exec 19>> "$DIR/applescript.debug"
+  export BASH_XTRACEFD="19"
+  set -x
+fi
+
+TRASHDIR=$(mktemp -d /tmp/up-to-date.XXXXXXXXXXXXX)
+cleanup() {
+  rm -rf "$TRASHDIR"
+}
+trap cleanup EXIT
+
+# Newer version of `git` may be in /usr/local/bin per standard GitHub workstation
+# setup. Adjusting the path here lets us find `git` there, in preference to system
+# git, if present.
+if [ -x "/usr/local/bin/git" ]; then
+  export PATH="/usr/local/bin:$PATH"
+fi
+
+cd "$DIR"
+
+if git rev-parse --abbrev-ref HEAD >"$TRASHDIR/local-branch-name" 2>&1; then
+  # All is well, keep going.
+  :
 else
-  echo "Somehow you've diverged from the origin master branch. Please fix this up and try again."
-  exit 1
+  echo "WARNING: I could not determine the local branch name of your git checkout!"
+  echo "Version comparisons will be made against the master branch on GitHub."
+  echo "master" > "$TRASHDIR/local-branch-name"
+fi
+
+branch=$(cat "$TRASHDIR/local-branch-name")
+
+if [ "$branch" != "master" ]; then
+  if git fetch origin "$branch" >"$TRASHDIR/git-fetch.out" 2>&1; then
+    # All is well on user's custom branch, keep going.
+    :
+  else
+    # User's custom branch does not exist remotely, so we will retry with master."
+    echo "WARNING: You have the ${branch} branch checked out locally but this branch does not"
+    echo "exist on GitHub. Version comparisons will be made against the master branch on GitHub."
+    branch="master"
+  fi
+fi
+
+if [ "$branch" == "master" ]; then
+  if git fetch origin "$branch" >"$TRASHDIR/git-fetch.out" 2>&1; then
+    # All is well, keep going.
+    :
+  else
+    echo "WARNING: Fetching the latest information for 'github/vpn' from GitHub failed!"
+    echo "I cannot determine if your repository checkout is up-to-date or not."
+    echo "The output from the git command is saved in: $DIR/git-fetch.out"
+    echo git fetch origin "$branch" > "$DIR/git-fetch.out"
+    cat "$TRASHDIR/git-fetch.out" >> "$DIR/git-fetch.out"
+    exit 1
+  fi
+fi
+
+# Grab the `config.version` file from the master branch on the remote server.
+if git show "origin/${branch}:/config.version" >"$TRASHDIR/config.version" 2>"$TRASHDIR/show.log"; then
+  # All is well, we fetched the file.
+  :
+else
+  echo "WARNING: Fetching the config.version file from GitHub failed!"
+  echo "The output from the git command is saved in: $DIR/git-show.out"
+  echo "--"
+  echo git show "origin/${branch}:/config.version" > "$DIR/git-show.out"
+  cat "$TRASHDIR/config.version" "$TRASHDIR/show.log" >> "$DIR/git-show.out"
+  echo "version:99999" > "$TRASHDIR/config.version"
+fi
+
+# Compare config.version from the remote against config.version locally.
+local_config_version=$(grep "^version:" "$DIR/config.version" | cut -d: -f2)
+remote_config_version=$(grep "^version:" "$TRASHDIR/config.version" | cut -d: -f2)
+echo "Local version: ${local_config_version}; Remote version: ${remote_config_version}"
+
+if [ "$local_config_version" -ge "$remote_config_version" ]; then
+  echo "Your git checkout is up-to-date."
+  exit 0
+else
+  echo "Your git checkout is behind. Please run 'git pull'."
+  exit 2
 fi

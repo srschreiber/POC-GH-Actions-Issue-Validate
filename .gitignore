@@ -4,6 +4,7 @@ ca_crt
 *.tgz
 *.key
 *.crt
+*.out
 *p12
 KEYS
 .profiles
