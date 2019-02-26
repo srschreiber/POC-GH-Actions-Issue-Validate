@@ -7,10 +7,20 @@ cleanup() {
 }
 trap cleanup EXIT
 
-if "$DIR/script/up-to-date" > "$TRASHDIR/up-to-date.out" 2>&1; then
+"$DIR/script/up-to-date" > "$TRASHDIR/up-to-date.out" 2>&1
+uptodate_rc=$?
+
+if [ $uptodate_rc -eq 0 ]; then
   # Don't print anything if it's all OK
   exit 0
-else
-  cat "$TRASHDIR/up-to-date.out"
-  exit 1
 fi
+
+if [ $uptodate_rc -eq 2 ]; then
+  # Printing a message but exiting 0 triggers applescript instructions.
+  cat "$TRASHDIR/up-to-date.out"
+  exit 0
+fi
+
+# Something else happened.
+cat "$TRASHDIR/up-to-date.out"
+exit 1
