@@ -1,4 +1,16 @@
 #!/bin/bash
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
-exec "$DIR/script/up-to-date"
+TRASHDIR=$(mktemp -d /tmp/up-to-date.XXXXXXXXXXXXX)
+cleanup() {
+  rm -rf "$TRASHDIR"
+}
+trap cleanup EXIT
+
+if "$DIR/script/up-to-date" > "$TRASHDIR/up-to-date.out" 2>&1; then
+  # Don't print anything if it's all OK
+  exit 0
+else
+  cat "$TRASHDIR/up-to-date.out"
+  exit 1
+fi
