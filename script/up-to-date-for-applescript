@@ -1,63 +1,26 @@
 #!/bin/bash
 
-# Expectations:
-# - Repo up to date: Print nothing, exit 0
-# - Repo not up to date: Print something, exit 0
-# - Failure: Print an error message, exit != 0
-
-set -e
-set -o pipefail
-
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
-
-if [ -f "$DIR/applescript.debug" ]; then
-  echo "---- Start $0 at $(date) ----" >> "$DIR/applescript.debug"
-  # https://askubuntu.com/questions/811439/bash-set-x-logs-to-file/1001404#1001404
-  exec   > >(tee -ia "$DIR/applescript.debug")
-  exec  2> >(tee -ia "$DIR/applescript.debug" >& 2)
-  exec 19>> "$DIR/applescript.debug"
-  export BASH_XTRACEFD="19"
-  set -x
-fi
-
-TRASHDIR=$(mktemp -d /tmp/up-to-date-for-applescript.XXXXXXXXXXXXX)
+TRASHDIR=$(mktemp -d /tmp/up-to-date.XXXXXXXXXXXXX)
 cleanup() {
   rm -rf "$TRASHDIR"
 }
 trap cleanup EXIT
 
-# Newer version of `git` may be in /usr/local/bin per standard GitHub workstation
-# setup. Adjusting the path here lets us find `git` there, in preference to system
-# git, if present.
-if [ -x "/usr/local/bin/git" ]; then
-  export PATH="/usr/local/bin:$PATH"
+"$DIR/script/up-to-date" > "$TRASHDIR/up-to-date.out" 2>&1
+uptodate_rc=$?
+
+if [ $uptodate_rc -eq 0 ]; then
+  # Don't print anything if it's all OK
+  exit 0
 fi
 
-cd "$DIR"
-if git fetch --all >"$TRASHDIR/git-fetch-all.out" 2>&1; then
-  # All is well, keep going.
-  :
-else
-  echo "WARNING: Fetching the latest information for 'github/vpn' from GitHub failed!"
-  echo "I cannot determine if your repository checkout is up-to-date or not."
-  echo "The output from the git command is saved in: $DIR/git-fetch-all.out"
-  cp -f "$TRASHDIR/git-fetch-all.out" "$DIR/git-fetch-all.out"
-  exit 1
+if [ $uptodate_rc -eq 2 ]; then
+  # Printing a message but exiting 0 triggers applescript instructions.
+  cat "$TRASHDIR/up-to-date.out"
+  exit 0
 fi
 
-LOCAL=$(git rev-parse HEAD)
-REMOTE=$(git rev-parse "@{upstream}" 2>/dev/null || echo "none")
-BASE=$(git merge-base HEAD "@{upstream}" 2>/dev/null || echo "none")
-
-if [ "$LOCAL" == "$REMOTE" ]; then
-  exit 0
-elif [ "$REMOTE" == "$BASE" ]; then
-  # Local repo contains changes. That's fine!
-  exit 0
-elif [ "$LOCAL" == "$BASE" ]; then
-  echo "It looks like your local repo is out of date. Please run 'git pull' and then run 'make configure-viscosity' again!"
-  exit 0
-else
-  echo "Somehow you've diverged from the origin master branch. Please fix this up and try again."
-  exit 1
-fi
+# Something else happened.
+cat "$TRASHDIR/up-to-date.out"
+exit 1
