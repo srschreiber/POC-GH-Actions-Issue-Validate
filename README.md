@@ -32,7 +32,10 @@ All VPN endpoints require Duo. Our Duo implementation for the VPN is a little bi
     ```
 1. Now there are 7 folders in the root of this repo (github/vpn) with `config.conf` files. Copy these files (order doesn't matter) into each of the folders you just created.
 
-1. Copy that `pkcs.p12` file from the `make certificate` step into each of the directories in `~/Library/Application Support/Viscosity/OpenVPN/`  You just replicate this same file in each of these directories.
+1. Copy that `pkcs.p12` file from the `make certificate` step into each of the directories in `~/Library/Application Support/Viscosity/OpenVPN/`  You just replicate this same file in each of these directories. Example command:
+    ```
+    for i in 1 2 3 4 5 6 7; do cp pkcs.p12 ~/Library/Application\ Support/Viscosity/OpenVPN/$i/ ; done
+    ````
 
 1.  Open Viscosity (CMD + Space type Viscosity) - a Globe icon will appear in your menubar
 
