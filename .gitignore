@@ -12,3 +12,4 @@ KEYS
 *.visc/check-vpn.applescript.tmp
 applescript.debug
 git-fetch-all.out
+.successful-fetch
