@@ -7,6 +7,7 @@ ca_crt
 *.out
 *p12
 KEYS
+.managed-profiles
 .profiles
 *.visc/check-vpn.app
 *.visc/check-vpn.applescript.tmp

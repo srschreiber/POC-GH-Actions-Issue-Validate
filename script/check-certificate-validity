@@ -20,13 +20,25 @@ cleanup() {
 }
 trap cleanup EXIT
 
+# .managed-profiles keeps track of the profiles that were installed by `make configure-viscosity`.
+# This file was introduced after some people had set up VPN so it could be missing. Make a best guess
+# at constructing it if it is missing.
+if [ ! -f "$DIR/.managed-profiles" ]; then
+  true > "$DIR/.managed-profiles"
+  find "$HOME/Library/Application Support/Viscosity/OpenVPN" -name "*.p12" -type f | while read -r line; do
+    dirname "$line" >> "$DIR/.managed-profiles"
+  done
+fi
+
 export PASS=''
-find "$HOME/Library/Application Support/Viscosity/OpenVPN" -name *.p12 -type f | while read -r f; do
-  openssl pkcs12 -in "$f" -nokeys -clcerts -passin env:PASS >"$TRASHDIR/certificate.crt"
-  openssl x509 -in "$TRASHDIR/certificate.crt" -noout -text
-  if openssl x509 -in "$TRASHDIR/certificate.crt" -noout -checkend $1; then continue; fi
-  echo "Certificate ${f} expires soon."
-  exit 1
+cat "$DIR/.managed-profiles" | while read -r dir; do
+  for f in "$dir/"*.p12; do
+    openssl pkcs12 -in "$f" -nokeys -clcerts -passin env:PASS >"$TRASHDIR/certificate.crt"
+    openssl x509 -in "$TRASHDIR/certificate.crt" -noout -text
+    if openssl x509 -in "$TRASHDIR/certificate.crt" -noout -checkend "$1"; then continue; fi
+    echo "Certificate ${f} expires soon."
+    exit 1
+  done
 done
 
 exit 0
