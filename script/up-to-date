@@ -61,6 +61,7 @@ fi
 if [ "$branch" == "master" ]; then
   if git fetch origin "$branch" >"$TRASHDIR/git-fetch.out" 2>&1; then
     # All is well, keep going.
+    touch "$DIR/.successful-fetch"
     :
   else
     echo "WARNING: Fetching the latest information for 'github/vpn' from GitHub failed!"
@@ -68,6 +69,22 @@ if [ "$branch" == "master" ]; then
     echo "The output from the git command is saved in: $DIR/git-fetch.out"
     echo git fetch origin "$branch" > "$DIR/git-fetch.out"
     cat "$TRASHDIR/git-fetch.out" >> "$DIR/git-fetch.out"
+
+    # For certain people when they open their laptop the network is not fully connected
+    # before this gets triggered as Viscosity tries to reconnect. To prevent annoyance,
+    # let's see if the person has successfully fetched within the last 7 days. If so, we
+    # will not pop up the error message.
+    if [ -f "$DIR/.successful-fetch" ]; then
+      last_touch=$(stat -f "%c" "$DIR/.successful-fetch")
+      current_time=$(date +%s)
+      diff=$((current_time-last_touch))
+      if [ $diff -lt 604800 ]; then
+        echo "Exiting with success because a successful fetch occurred ${diff} seconds ago."
+        exit 0
+      fi
+    fi
+
+    # If not rescued by .successful-fetch logic, exit here with an error.
     exit 1
   fi
 fi
