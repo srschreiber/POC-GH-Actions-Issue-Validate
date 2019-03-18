@@ -65,6 +65,10 @@ cleanup() {
 }
 trap cleanup EXIT
 
+# Keep track of each profile that we are managing, so that the certificate
+# checker does not throw false alarms on profiles we are not managing.
+true > "$DIR/.managed-profiles"
+
 # Pass 1:
 # - If a profile is missing, warn and skip
 # - Compile the applescript
@@ -103,6 +107,7 @@ update_profile() {
   if grep -q -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf 2>/dev/null ; then
     target=$(grep -l -m1 -e "name $profile\$" "$HOME/Library/Application Support/Viscosity/OpenVPN/"*/config.conf)
     target_dir=$(dirname "$target")
+    echo "$target_dir" >> "${DIR}/.managed-profiles"
 
     echo ""
     echo "Updating connection profile for $profile..."
