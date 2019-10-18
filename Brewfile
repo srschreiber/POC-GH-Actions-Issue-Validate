@@ -1,2 +1,2 @@
-tap "caskroom/cask"
+tap "homebrew/cask"
 cask "viscosity"
