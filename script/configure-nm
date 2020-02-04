@@ -1,5 +1,9 @@
 #!/bin/bash
-# This script actually configures Network Manager
+#
+# This script adds the VPN profiles to Network Manager (Linux)
+#
+# Usage: ./script/configure-nm
+#
 set -e
 set -o pipefail
 
