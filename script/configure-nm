@@ -5,6 +5,11 @@ set -o pipefail
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
+if ! systemctl is-active --quiet network-manager.service; then
+  echo "This script needs Network Manager to be running. Aborting." >&2
+  exit 1
+fi
+
 if [ ! -f "$DIR/pkcs.p12" ]; then
   # If there are valid certificates in the configured directories, then don't complain.
   # We'll just re-use those.
