@@ -1,0 +1,71 @@
+#!/bin/bash
+# This script actually configures Network Manager
+set -e
+set -o pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+
+if [ ! -f "$DIR/pkcs.p12" ]; then
+  # If there are valid certificates in the configured directories, then don't complain.
+  # We'll just re-use those.
+  if "$DIR/script/check-certificate-validity" 1 >/dev/null 2>&1; then
+    :
+  else
+    echo "ERROR: Missing or expired VPN certificate."
+    echo "Please run 'make certificate' to obtain your VPN certificate before attempting to configure Viscosity."
+    exit 255
+  fi
+fi
+
+if [ ! -f "$DIR/.profiles" ]; then
+  echo "ERROR: Missing VPN profiles."
+  echo "Please run 'make certificate' to obtain your VPN profiles before attempting to configure Viscosity."
+  exit 255
+fi
+
+TRASHDIR=$(mktemp -d /tmp/get-certificate.XXXXXXXXXXXXX)
+cleanup() {
+  rm -rf "$TRASHDIR"
+}
+trap cleanup EXIT
+
+#
+# Import each authorized connection
+#
+
+# Keep track of each profile that we are managing, so that the certificate
+# checker does not throw false alarms on profiles we are not managing.
+true > "$DIR/.managed-profiles"
+
+#
+# Each VPN profile will be recreated when present
+#
+import_profiles=""
+update_profiles=""
+all_profiles=$(cat "${DIR}/.profiles" | tr "," "\n")
+for profile in $all_profiles; do
+  echo "Pre-processing ${profile}"
+  if [ ! -d "$DIR/$profile.visc" ]; then
+    echo "Warning: You are authorized for profile ${profile} but no template configuration exists." 1>&2
+    echo "Installation of ${profile} is being skipped. Please report this to #security-ops-eng." 1>&2
+    continue
+  fi
+
+
+  targetcfg="$TRASHDIR/$profile"
+  # `nmcli import` uses the file name without extension for the VPN profile name
+  cp "$profile.visc/config.conf" "$targetcfg"
+  # Embbed the certificate
+  sed -i "s/pkcs.*//g" "$targetcfg"
+  echo "<pkcs12>" >> "$targetcfg"
+  openssl base64 -in pkcs.p12 >> "$targetcfg"
+  echo "</pkcs12>" >> "$targetcfg"
+  if nmcli connection show | grep "$profile" > /dev/null 2>&1; then
+    echo "Re-creating existing VPN profile $profile..."
+    nmcli connection delete "$profile"
+  fi
+  nmcli connection import type openvpn file "$targetcfg" > /dev/null
+done
+
+echo ""
+echo "Congratulations, your connections have been imported/updated."
