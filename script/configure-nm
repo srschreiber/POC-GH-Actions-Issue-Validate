@@ -74,6 +74,7 @@ for profile in $all_profiles; do
     nmcli connection delete "$profile"
   fi
   nmcli connection import type openvpn file "$targetcfg" > /dev/null
+  nmcli connection modify $profile ipv4.never-default yes
 done
 
 echo ""
