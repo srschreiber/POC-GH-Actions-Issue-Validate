@@ -21,14 +21,14 @@ if [ ! -f "$DIR/pkcs.p12" ]; then
     :
   else
     echo "ERROR: Missing or expired VPN certificate."
-    echo "Please run 'make certificate' to obtain your VPN certificate before attempting to configure Viscosity."
+    echo "Please run 'make certificate' to obtain your VPN certificate before attempting to configure Network Manager."
     exit 255
   fi
 fi
 
 if [ ! -f "$DIR/.profiles" ]; then
   echo "ERROR: Missing VPN profiles."
-  echo "Please run 'make certificate' to obtain your VPN profiles before attempting to configure Viscosity."
+  echo "Please run 'make certificate' to obtain your VPN profiles before attempting to configure Network Manager."
   exit 255
 fi
 
