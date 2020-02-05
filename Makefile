@@ -60,7 +60,10 @@ start:
 	@echo "Starting Viscosity..."
 	@/usr/bin/open /Applications/Viscosity.app/
 
-linux: up-to-date certificate unsupported
+configure-nm:
+	@./script/configure-nm
+
+linux: up-to-date certificate configure-nm
 
 unsupported:
 	@./script/unsupported
