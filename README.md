@@ -76,6 +76,8 @@ Bless your heart! You're going to need to download and install a few things:
 
 ### Configure
 
+#### macOS
+
  * Download the Viscosity configuration files you want from this repository, ie `github-iad-prod.visc/config.conf`
  * Change their file extension to `.ovpn` and move them inside the
    OpenVPN config directory (\Program Files\OpenVPN\Config), ie `C:\Program Files\OpenVPN\Config\github-iad-prod.ovpn`. PROTIP: You may need to configure windows to 'Show extensions of known files' to properly rename the file. If this was done correctly, its icon should change to resemble
@@ -97,6 +99,14 @@ Bless your heart! You're going to need to download and install a few things:
 
  * Use WinSCP to connect to `vault-bastion.githubapp.com` and download `vpn-credentials.p12` into the OpenVPN config directory.
  * Delete `vpn-credentials.p12` off the server, because :lock:.
+
+#### Linux
+
+You'll need Network Manager running. It should be working out of the box with Ubuntu and Fedora.
+
+To download certificates and add VPN profiles to Network Manager run:
+
+`make linux`
 
 ### Run
  * Start OpenVPN GUI **in administrator mode** (ie right click the menu item, and select "Run as Administrator")
