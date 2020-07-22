@@ -9,7 +9,7 @@ set -o pipefail
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
-if ! systemctl is-active --quiet network-manager.service; then
+if ! (systemctl is-active --quiet network-manager.service || systemctl is-active --quiet NetworkManager.service); then
   echo "This script needs Network Manager to be running. Aborting." >&2
   exit 1
 fi
