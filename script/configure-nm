@@ -61,7 +61,7 @@ for profile in $all_profiles; do
   fi
 
 
-  targetcfg="$TRASHDIR/$profile"
+  targetcfg="$TRASHDIR/$profile.ovpn"
   # `nmcli import` uses the file name without extension for the VPN profile name
   cp "$profile.visc/config.conf" "$targetcfg"
   # Embbed the certificate
