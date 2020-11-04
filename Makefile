@@ -1,5 +1,8 @@
 .PHONY: install-viscosity up-to-date preflight certificate import import-prod import-mgmt start
 
+# We want the steps to happen in order, but still allow them to be run individually if needed
+.NOTPARALLEL: linux
+
 install: install-viscosity
 
 viscosity:
