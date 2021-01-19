@@ -10,11 +10,22 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 cd "$DIR"
 
+# Parse version output from brew for numerical comparison
+function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
+
+# Get currently installed brew version
+BREW_VERSION=$(brew -v 2>&1 | head -n1 | cut -d' ' -f2)
+
 echo "Installing viscosity with homebrew..."
 brew update  # failure to do this first can result in unknown command: bundle on new systems
 brew uninstall --force brew-cask
 brew bundle check >/dev/null || brew bundle
-brew cask uninstall --force viscosity
+# Use correct syntax of cask based on brew version
+if [ $(version $BREW_VERSION) -ge $(version "2.6.0") ]; then
+    brew uninstall --cask --force viscosity
+else
+    brew cask uninstall --force viscosity
+fi
 brew update
 brew bundle
 open "/Applications/Viscosity.app/"
