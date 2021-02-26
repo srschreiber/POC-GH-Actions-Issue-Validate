@@ -68,5 +68,10 @@ configure-nm:
 
 linux: up-to-date certificate configure-nm
 
+windows-import:
+	@./script/windows
+
+windows: up-to-date certificate windows-import
+
 unsupported:
 	@./script/unsupported
