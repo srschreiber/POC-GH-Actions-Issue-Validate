@@ -1,6 +1,6 @@
 # GitHub VPN
 
-**The authoritative document on VPN access is in [GitHubber](https://githubber.com/article/crafts/engineering/production-vpn-access).**
+**The authoritative document on VPN access is on [TheHub](https://thehub.github.com/engineering/security/production-vpn-access/).**
 
 ## Troubleshooting
 
