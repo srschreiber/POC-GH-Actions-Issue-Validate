@@ -13,7 +13,6 @@ ownership:
   team: github/security-ops
   maintainer: mrsbworth
   exec_sponsor: mph4
-  volunteers: []
   sev1:
     pagerduty: https://github.pagerduty.com/escalation_policies#PG0C50I
     tta: 30 min
