@@ -4,14 +4,13 @@
 
 ## Troubleshooting
 
-### VPN + Duo
+### VPN + FIDO
 
-All VPN endpoints require Duo. Our Duo implementation for the VPN is a little bit non-standard and there are a few things that you need to know:
+All VPN endpoints require FIDO/webauthn for 2FA. Our FIDO implementation for the VPN is a little bit non-standard and there are a few things that you need to know:
 
-1. Duo Push is the only method that we support for VPN therefore you must have the Duo app installed and activated.
-2. Duo is only required once every 24 hours for each site you connect to as long as you are connecting from the same IP.
-3. Viscosity has no mechanism to tell you that you need to answer a Duo prompt, so its best to have your mobile device handy when VPNing.
-4. If you fail to answer the Duo prompt within 1 minute of connecting, the VPN server will forcibly disconnect you. For viscosity users, this will appear as an "Authentication Failed" message.
+1. It uses the `fido-challenger` service.
+2. Viscosity has no built-in mechanism to challenge for FIDO directly, so it's done as an additional step with username / password authentication.
+3. After you enter your username and LDAP/Okta password, Viscosity will prompt you for a token supplied when you've successfully authenticated with `fido-challenger`.
 
 ### If something goes wrong during Setup - Try These Steps
 
@@ -39,7 +38,13 @@ All VPN endpoints require Duo. Our Duo implementation for the VPN is a little bi
 
 1.  Open Viscosity (CMD + Space type Viscosity) - a Globe icon will appear in your menubar
 
-1.  Try to connect!  It should work now!
+1.  Try to connect!
+
+1.  Enter your username and LDAP / Okta password when prompted.
+
+1.  When promptmed for the FIDO 2FA token, visit the URL included and submit the token from `fido-challenger`
+
+1.  It should work now!
 
 ## Updating
 
@@ -65,6 +70,8 @@ Someone from the Ops team will help you as soon as they can!
     make uninstall
 
 ## Running Windows?
+
+** NOTE: With the changes to `fido-challenger` for FIDO 2FA, the non-Macos platforms are again completely untested. **
 
 Bless your heart! You're going to need to download and install a few things:
 
@@ -99,6 +106,8 @@ Bless your heart! You're going to need to download and install a few things:
  * Delete `vpn-credentials.p12` off the server, because :lock:.
 
 #### Linux
+
+** NOTE: With the changes to `fido-challenger` for FIDO 2FA, the non-Macos platforms are again completely untested. **
 
 You'll need Network Manager running. It should be working out of the box with Ubuntu and Fedora.
 
