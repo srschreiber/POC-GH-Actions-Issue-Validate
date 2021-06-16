@@ -1,0 +1,17 @@
+#!/usr/bin/env osascript
+
+# This script take profile name as argument. If one is not provided then a dialog
+# pops up to ask for a profile. It open Viscosity with that profile and also launches 
+
+on run argv
+  try
+    set profile to (item 1 of argv)
+  on error
+    display dialog "Enter the Viscosity profile name:" default answer "github-iad-devvpn"
+    set profile to text returned of result
+  end try
+  tell application "Viscosity" to connect profile
+  if ( profile is not "github-iad-devvpn" )
+    do shell script "open https://fido-challenger.githubapp.com/auth/vpn-prod"
+  end if
+end run
