@@ -1,7 +1,8 @@
 #!/usr/bin/env osascript
 
 # This script take profile name as argument. If one is not provided then a dialog
-# pops up to ask for a profile. It open Viscosity with that profile and also launches 
+# pops up to ask for a profile. It open Viscosity with that profile and also launches
+# a browser window (using default browser) with https://fido-challenger.githubapp.com/auth/vpn-prod
 
 on run argv
   try
