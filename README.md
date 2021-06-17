@@ -36,9 +36,7 @@ All VPN endpoints require FIDO/webauthn for 2FA. Our FIDO implementation for the
     for i in 1 2 3 4 5 6 7; do cp pkcs.p12 ~/Library/Application\ Support/Viscosity/OpenVPN/$i/ ; done
     ````
 
-1.  Open Viscosity (CMD + Space type Viscosity) - a Globe icon will appear in your menubar
-
-1.  Try to connect!
+1.  Open Viscosity (CMD + Space type Viscosity) - a Globe icon will appear in your menubar; select the VPN profile to connect to it  OR From a terminal run `~/github/vpn/script/connect-to <profile_name>` to connect to a profile and open a browser page to the FIDO Challenger
 
 1.  Enter your username and LDAP / Okta password when prompted.
 
