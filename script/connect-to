@@ -14,5 +14,7 @@ on run argv
   tell application "Viscosity" to connect profile
   if ( profile is not "github-iad-devvpn" )
     do shell script "open https://fido-challenger.githubapp.com/auth/vpn-prod"
+  else
+    do shell script "open https://fido-challenger.githubapp.com/auth/vpn-devvpn"
   end if
 end run
