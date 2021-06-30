@@ -43,10 +43,10 @@ fi
 #
 
 echo ""
-echo "Please be prepared for 2 Duo pushes (one from the bastion and one from Vault)!"
+echo "Please be prepared for 2 FIDO challenges (one from the bastion and one from Vault)!"
 echo ""
 
-echo "${GITHUB_PASSWORD}" | ssh "$VAULT_BASTION" "env VAULT_NONINTERACTIVE='true' \"$TARGET_SCRIPT\"" > "$TRASHDIR/certificate.raw"
+echo "${GITHUB_PASSWORD}" | ssh "$VAULT_BASTION" "env VAULT_NONINTERACTIVE='true' \"$TARGET_SCRIPT\"" | grep -v "Successfully authenticated." > "$TRASHDIR/certificate.raw"
 api_string=$(cat "$TRASHDIR/certificate.raw" | sed "1q;d")
 
 if [ "$api_string" == "vpn-credential-issuer API v1.0" ]; then
