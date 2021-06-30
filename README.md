@@ -84,13 +84,13 @@ Bless your heart! You're going to need to download and install a few things:
  * Download the Viscosity configuration files you want from this repository, ie `github-iad-prod.visc/config.conf`
  * Change their file extension to `.ovpn` and move them inside the
    OpenVPN config directory (\Program Files\OpenVPN\Config), ie `C:\Program Files\OpenVPN\Config\github-iad-prod.ovpn`. PROTIP: You may need to configure windows to 'Show extensions of known files' to properly rename the file. If this was done correctly, its icon should change to resemble
- * SSH to `vault-bastion.githubapp.com` (see https://thehub.github.com/engineering/security/production-shell-access for all the specifics around keys and authorization). You'll need to accept a Duo push to log in. Once you're logged in run these commands in the order shown and make sure that the output looks similar:
+ * SSH to `vault-bastion.githubapp.com` (see https://thehub.github.com/engineering/security/production-shell-access for all the specifics around keys and authorization). You'll need to complete a FIDO challenge to log in. Once you're logged in run these commands in the order shown and make sure that the output looks similar:
 
       ```
       bob@vault-bastion-a642f4f.vpc-us-east-1(prd) ~ $ . vault-login
       Hello, bob.
       github.com password:
-      Please check your device for a Duo push to complete your login.
+      FIDO authentication required for vault. Follow the link to authorize.
       Login succeeded. VAULT_TOKEN has been set in your environment.
       Successfully authenticated. Your vault token has been set in the environment.
 
