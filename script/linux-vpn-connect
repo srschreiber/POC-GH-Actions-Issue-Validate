@@ -19,4 +19,3 @@ missing () {
 
 echo "⌨️  Enter your 'sudo' password when prompted"
 sudo openvpn --config ~/.vpn/github-dev-vpn.ovpn --verb 1 --data-ciphers-fallback AES-128-CBC
-​
