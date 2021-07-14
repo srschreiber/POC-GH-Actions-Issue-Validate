@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Run this script to connect to the VPN on a Linux system
+
+set -e
+
+VPN_DIR=~/.vpn
+cd $VPN_DIR
+
+missing () {
+   echo "❌ Missing $VPN_DIR/$1 file"
+   echo "Check out the docs: https://thehub.github.com/engineering/security/developer-vpn-access/linux/#openvpn-config"
+   exit 1
+}
+
+[ ! -f ca.crt ] && missing "ca.crt"
+[ ! -f ta.key ] && missing "ta.key"
+[ ! -f github-dev-vpn.ovpn ] && missing "github-dev-vpn.ovpn"
+
+echo "⌨️  Enter your 'sudo' password when prompted"
+sudo openvpn --config ~/.vpn/github-dev-vpn.ovpn --verb 1 --data-ciphers-fallback AES-128-CBC
