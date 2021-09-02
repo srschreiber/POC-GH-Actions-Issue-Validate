@@ -20,4 +20,4 @@ ownership:
     issue: https://github.com/github/SecOps/issues
     tta: 7 business days
   sev3:
-    slack: security-ops-eng
+    slack: security-ops-eng (inactive) # FIXME: Replace this.
