@@ -7,7 +7,7 @@ end get_token
 
 on is_on_auth_form(t)
   tell application "Google Chrome"
-    tell t to execute javascript "document.getElementsByTagName('input').length == 2 && document.getElementsByTagName('input')[1].value == 'AUTHORIZE ME'"
+    tell t to execute javascript "document.forms[0].lastElementChild.innerText == 'AUTHORIZE ME '"
   end tell
 end is_on_auth_form
 
