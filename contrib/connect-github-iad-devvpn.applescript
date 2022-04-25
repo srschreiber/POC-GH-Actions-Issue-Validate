@@ -20,6 +20,10 @@ end submit_form
 
 on run argv
   tell application "Google Chrome"
+    if it is not running then
+      activate
+      delay 5
+    end if
     tell first window
       set tokenWindow to make new tab with properties {URL:"https://fido-challenger.githubapp.com/auth/vpn-devvpn"}
 	  repeat while my is_on_auth_form(tokenWindow) is false
