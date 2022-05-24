@@ -17,7 +17,8 @@ All VPN endpoints require FIDO/webauthn for 2FA. Our FIDO implementation for the
 1. Uninstall Viscosity if it was previously installed
 1. Clone this repo into ~/github
 1. Run `make certificate` -- when Viscosity isn't installed this will drop `pkcs.p12` into this directory
-1. Download Viscosity from https://gear.githubapp.com/apps/
+1. Download Viscosity
+    - (On MacOS) Open Launchpad, select the `Self Service` app, find `Viscosity (VPN)` and click the `Install` button
 1. Install Viscosity this will create directory `~/Library/Application Support/Viscosity/OpenVPN`
 1. Navigate to this directory, create folders with names 1 - 7. This is because there are 7 types of connections. Example:
     ```
