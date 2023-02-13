@@ -20,7 +20,7 @@ jobs:
           }
           EOF
           )
-          API_ENDPOINT=https://it-offboarding-staging.service.iad.github.net/dual_access/validate
+          API_ENDPOINT=https://it-offboarding-staging-general-2-ash1-iad.service.ash1-iad.github.net/dual_access/validate
           echo $API_ENDPOINT
           echo $PAYLOAD
           curl -X POST $API_ENDPOINT \
