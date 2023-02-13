@@ -37,7 +37,7 @@ def validate(body):
  
         # Write the updated environment variable to a file
         with open(os.environ.get("GITHUB_OUTPUT"), "a") as file:
-            file.write("ISSUE_DETECTED=yes")
+            file.write("ISSUE_DETECTED=yes\n")
             file.write(f"ISSUE={e}")
         logger.error(f"[DualAccessValidator] error validating issue: {e}")
 
