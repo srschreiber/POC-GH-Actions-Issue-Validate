@@ -31,12 +31,12 @@ jobs:
         id: validate
         run: |
           python src/validate_issue.py "${{ github.event.issue.body }}"
-          
+
       - name: Add comment
         if: steps.validate.outputs.ISSUE_DETECTED == 'yes'
         uses: peter-evans/create-or-update-comment@a35cf36e5301d70b76f316e867e7788a55a31dae
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            This is a test.** :sparkles: Thank you for your contribution! :sparkles:
+            ${{  steps.validate.outputs.ISSUE }}
 
