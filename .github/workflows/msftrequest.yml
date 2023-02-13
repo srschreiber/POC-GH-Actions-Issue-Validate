@@ -11,9 +11,9 @@ jobs:
     permissions:
       issues: write
     steps:
+      - name: Install dependencies
+        run: pip install -r requirements.txt
       - name: Validate Issue
-        run: |
-          pip install -r requirements.txt
-          python src/validate_issue.py "${{ github.event.issue.body }}""
+        run: python src/validate_issue.py "${{ github.event.issue.body }}"
 
         
