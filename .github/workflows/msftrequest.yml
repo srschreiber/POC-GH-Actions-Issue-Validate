@@ -34,14 +34,14 @@ jobs:
 
       - name: Check if a comment should be posted
         if: steps.validate.outputs.ISSUE_DETECTED == 'yes'
-        uses: actions/github-script@v3
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Add comment
+        uses: peter-evans/create-or-update-comment@a35cf36e5301d70b76f316e867e7788a55a31dae
         with:
-          script: |
-            const octokit = require('@octokit/rest')();
-            octokit.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: 'This is a comment posted only if the environment variable "ISSUE_DETECTED" is set to "yes".'
-            });
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            This is a test.** :sparkles: Thank you for your contribution! :sparkles:
 
