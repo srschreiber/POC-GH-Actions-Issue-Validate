@@ -31,6 +31,9 @@ jobs:
         id: validate
         run: python src/validate_issue.py "${{ github.event.issue.body }}"
 
+      - name: Print issueDetected
+        run: echo "issueDetected: ${{ env.issueDetected }}"
+
       - name: Check if a comment should be posted
         if: env.issueDetected == 'yes'
         uses: actions/github-script@v3
