@@ -8,6 +8,13 @@ on: [issues]
 jobs:
   validate:
     runs-on: ubuntu-latest
+    env:
+      HR_CORE_API_HARD_DELETE_CLIENT_ID: ${{ secrets.HR_CORE_API_HARD_DELETE_CLIENT_ID }}
+      HR_CORE_API_URL: ${{ secrets.HR_CORE_API_URL }}
+      MSFT_AZURE_TENANT_ID: ${{ secrets.MSFT_AZURE_TENANT_ID }}
+      MSFT_TENANT_CLIENT_ID: ${{ secrets.MSFT_TENANT_CLIENT_ID }}
+      MSFT_TENANT_CLIENT_SECRET: ${{ secrets.MSFT_TENANT_CLIENT_SECRET }}
+
     permissions:
       issues: write
     steps:
