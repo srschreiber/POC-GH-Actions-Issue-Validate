@@ -28,7 +28,7 @@ def validate(body):
 
         employee_id = hr_core.get_employee_id_by_alias(alias_provided)
 
-        if str(employee_id.replace(" ", "")) != str(employee_id_provided):
+        if int(employee_id) != int(employee_id_provided):
             raise Exception(f"Employee id does not match alias {alias_provided}. provided id = {employee_id_provided}, should be = {employee_id}")
 
         return "matches"
