@@ -43,6 +43,28 @@ class HrCore:
 
         return r.json()["emailAlias"]
 
+    def get_employee_id_by_alias(self, alias):
+        token = self.__get_hr_api_bearer_token(self.hr_core_api_people_cid)
+        headers = {
+            "Authorization": token,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        }
+        url = f"{self.base_url}/Person/{alias}/getByAlias"
+        r = http.get(
+            url,
+            headers=headers,
+        )
+
+        if r is None:
+            raise Exception("None response from hr core api get msft employee id by alias")
+        
+        if r.status_code == 401:
+            raise Exception(f"Unauthorized status when requesting to {url}")
+
+        if r.status_code == 404:
+            raise Exception(f"Could not find user with alias {alias}")
+
     
     def __get_hr_api_bearer_token(self, target_client_id) -> str:
         data = {
