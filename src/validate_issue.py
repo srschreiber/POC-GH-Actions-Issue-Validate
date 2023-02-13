@@ -2,6 +2,7 @@ import logging
 import re
 import sys
 from hr_core import HrCore
+import os
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -33,6 +34,7 @@ def validate(body):
 
         return "matches"
     except Exception as e:
+        os["issueDetected"]= "yes"
         logger.error(f"[DualAccessValidator] error validating issue: {e}")
         raise e
 

@@ -14,6 +14,7 @@ jobs:
       MSFT_AZURE_TENANT_ID: ${{ secrets.MSFT_AZURE_TENANT_ID }}
       MSFT_TENANT_CLIENT_ID: ${{ secrets.MSFT_TENANT_CLIENT_ID }}
       MSFT_TENANT_CLIENT_SECRET: ${{ secrets.MSFT_TENANT_CLIENT_SECRET }}
+      issueDetected: "no"
 
     permissions:
       issues: write
@@ -27,6 +28,20 @@ jobs:
         run: |
           pip install requests
       - name: Validate Issue
+        id: validate
         run: python src/validate_issue.py "${{ github.event.issue.body }}"
+
+      - name: Check if a comment should be posted
+        if: env.issueDetected == 'yes'
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const octokit = require('@octokit/rest')();
+            octokit.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: 'This is a comment posted only if the environment variable "issueDetected" is set to "yes".'
+            });
  
         
