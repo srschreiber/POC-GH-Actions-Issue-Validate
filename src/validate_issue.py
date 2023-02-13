@@ -34,11 +34,9 @@ def validate(body):
 
         return "matches"
     except Exception as e:
-        os.environ["ISSUE_DETECTED"] = "yes"
-
+ 
         # Write the updated environment variable to a file
-        with open("issue_detected.env", "w") as f:
-            f.write("ISSUE_DETECTED=yes")
-        logger.error(f"[DualAccessValidator] error validating issue: {e}")
+        print(f"ISSUE_DETECTED=yes")
+        #logger.error(f"[DualAccessValidator] error validating issue: {e}")
 
 validate(sys.argv[1])
