@@ -14,7 +14,6 @@ jobs:
       MSFT_AZURE_TENANT_ID: ${{ secrets.MSFT_AZURE_TENANT_ID }}
       MSFT_TENANT_CLIENT_ID: ${{ secrets.MSFT_TENANT_CLIENT_ID }}
       MSFT_TENANT_CLIENT_SECRET: ${{ secrets.MSFT_TENANT_CLIENT_SECRET }}
-      ISSUE_DETECTED: no
 
     permissions:
       issues: write
@@ -32,8 +31,6 @@ jobs:
         id: validate
         run: |
           python src/validate_issue.py "${{ github.event.issue.body }}"
-        outputs:
-          ISSUE_DETECTED: ${{ steps.validate.outputs.ISSUE_DETECTED }}
 
       - name: Check if a comment should be posted
         if: steps.validate.outputs.ISSUE_DETECTED == 'yes'
@@ -47,3 +44,4 @@ jobs:
               issue_number: context.issue.number,
               body: 'This is a comment posted only if the environment variable "ISSUE_DETECTED" is set to "yes".'
             });
+
