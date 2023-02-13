@@ -30,6 +30,10 @@ jobs:
       - name: Validate Issue
         id: validate
         run: python src/validate_issue.py "${{ github.event.issue.body }}"
+      - name: Load updated ISSUE_DETECTED from file
+        run: echo "::set-env name=ISSUE_DETECTED::$(cat issue_detected.env | awk -F '=' '{print $2}')"
+      - name: Print ISSUE_DETECTED
+        run: echo "ISSUE_DETECTED: ${{ env.ISSUE_DETECTED }}"
 
       - name: Check if a comment should be posted
         if: steps.validate.outputs.ISSUE_DETECTED == 'yes'
