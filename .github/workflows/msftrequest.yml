@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Validate Issue
         run: |
-          ISSUE_NUMBER=$(echo $GITHUB_REF | sed 's/refs\/issues\///')
+          ISSUE_NUMBER=${{ github.event.issue.number }}
           PAYLOAD=$(cat <<EOF
           {
             "issue_number": $ISSUE_NUMBER
