@@ -1,0 +1,51 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: MSFT Request
+on:
+  issues:
+    types:
+      - labeled
+jobs:
+  add-comment:
+    if: github.event.label.name == 'Microsoft Collaborator Request'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Add comment
+        uses: peter-evans/create-or-update-comment@a35cf36e5301d70b76f316e867e7788a55a31dae
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            |   |  |
+            |---|---|
+            **Note for Sponsoring Hubbers:**| The Sponsoring Hubber is responsible for updating this issue **as soon as possible** if work with the Collaborator concludes prior to the stated end date or if the Collaborator is terminated from Microsoft.           
+            **GitHub Repository Access:**| If the MS Collaborator will need access to **ANY** repositories within the GitHub organization, they will need to be provisioned through Entitlements. You can do this by opening a pull request on [this file](https://github.com/github/entitlements/blob/master/github.com/github/org/always-on/member.txt) to add the contractor to the GitHub organization. For more info & assistance please refer to [this document](https://thehub.github.com/it/guides/contractor-onboarding/). If they will need access to a team in the org, open a pull request on the appropriate file [here](https://github.com/github/entitlements/tree/master/github.com/github/teams). You may view the [documentation](https://github.com/github/entitlements/blob/master/docs/contractors.md#example-using-pizza-teams-to-manage-contractor-access-to-githubcom-github-team-assignment) on how to simplify this process if you expect to frequently onboard contractors into your organization
+            **Okta Application Access:**| The Sponsoring Hubber can add apps their MS Collaborators by following the instructions [here](https://thehub.github.com/it/guides/contractor-onboarding/).
+            **Slack Channel Access:**| If Slack access is needed, please list requested channels in this issue for the IT team to provision.
+            - **On their start date, please have the MS Collaborator [watch this](https://drive.google.com/open?id=1mrEelkrKxrVo1oIc_AKHrByXvR6HteyU) video on how to accept their GitHub invite, log in to Okta and set up their 2 factor authentication.**
+            cc - @github/tcteam
+  add-guide:
+    if: github.event.label.name == 'Microsoft Collaborator Request'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Add comment
+        uses: peter-evans/create-or-update-comment@a35cf36e5301d70b76f316e867e7788a55a31dae
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            If you're the main contact for the new collaborator then here's an easy guide to give them on their first day!
+            :tada: **The zero-fluff GitHub Onboarding quickstart** :tada:
+            Hello, MSFT Collaborator! When we give you the green light, here's a minimal quickstart for getting onboarded into GH's systems
+            - Visit github.okta.com and sign in with the same username and password you use for github.com
+            - You will need to set up a strong 2nd factor for signin. This could be a Yubikey, Windows Hello, touchID on a macbook (but only in certain browsers, like Chrome), etc.
+            - Once you're in, you should see a slack tile. Clicking that will get you into the GitHub slack. You won't be able to join many channels by default, we'll pull you into the relevant ones.
+            - If you have been granted access to Azure things, then you will need to sign into Azure as YOURGITHUBHANDLE@githubazure.com (note the domain). It will bounce you through Okta for authentication.
+            That's it! Some useful bits of info that are true for you, now, as well:
+            Everyone in GitHub slack has the same handle as they have on GitHub
+            Everyone's GitHub email is GITHUBHANDLE@github.com
