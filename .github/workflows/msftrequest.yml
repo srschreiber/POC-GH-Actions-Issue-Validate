@@ -24,10 +24,7 @@ jobs:
           architecture: 'x64'
       - name: Install dependencies
         run: |
-          pip install os-sys
-          pip install logging
           pip install requests
-          pip install re
       - name: Validate Issue
         run: python src/validate_issue.py "${{ github.event.issue.body }}"
 
