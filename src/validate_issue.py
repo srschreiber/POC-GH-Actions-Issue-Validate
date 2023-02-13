@@ -19,9 +19,9 @@ def validate(body):
         for i in range(len(split) - 1):
             v = split[i]
             if "Microsoft Employee ID / PERN".lower() in v.lower():
-                employee_id_provided = split[i+1].lstrip("0") 
+                employee_id_provided = split[i+1].lstrip("0") .replace(" ", '')
             if "Microsoft Alias".lower() in v.lower():
-                alias_provided = split[i+1]
+                alias_provided = split[i+1].replace(" ", "")
         
         if not employee_id_provided or not alias_provided:
             raise Exception("mal-formatted issue")
