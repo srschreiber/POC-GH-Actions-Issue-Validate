@@ -15,17 +15,17 @@ jobs:
       issues: write
     steps:
         run: |
-        ISSUE_NUMBER=$(echo $GITHUB_REF | sed 's/refs\/issues\///')
-        PAYLOAD=$(cat <<EOF
-        {
-          "issue_number": $ISSUE_NUMBER
-        }
-        EOF
-        )
-        API_ENDPOINT=https://it-offboarding-staging.service.iad.github.net/dual_access/validate
-        echo $API_ENDPOINT
-        echo $PAYLOAD
-        curl -X POST $API_ENDPOINT \
-        -d "$PAYLOAD"
+          ISSUE_NUMBER=$(echo $GITHUB_REF | sed 's/refs\/issues\///')
+          PAYLOAD=$(cat <<EOF
+          {
+            "issue_number": $ISSUE_NUMBER
+          }
+          EOF
+          )
+          API_ENDPOINT=https://it-offboarding-staging.service.iad.github.net/dual_access/validate
+          echo $API_ENDPOINT
+          echo $PAYLOAD
+          curl -X POST $API_ENDPOINT \
+          -d "$PAYLOAD"
 
-      
+        
