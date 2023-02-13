@@ -25,7 +25,9 @@ jobs:
       - name: Install dependencies
         run: |
           pip install requests
+          ls
+          pwd
       - name: Validate Issue
-        run: python src/validate_issue.py "${{ github.event.issue.body }}"
-
+        run: python ./src/validate_issue.py "${{ github.event.issue.body }}"
+ d
         
