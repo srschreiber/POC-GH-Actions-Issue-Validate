@@ -18,6 +18,12 @@ class HrCore:
         self.azure_tenant_id = os.getenv("MSFT_AZURE_TENANT_ID")
         self.base_url = os.getenv("HR_CORE_API_URL")
 
+        logger.info( self.hr_core_api_people_cid)
+        logger.info( self.client_id)
+        logger.info( self.client_secret)
+        logger.info( self.azure_tenant_id)
+        logger.info( self.base_url)
+
 
     def get_alias_by_employee_id(self, employee_id):
         token = self.__get_hr_api_bearer_token(self.hr_core_api_people_cid)
