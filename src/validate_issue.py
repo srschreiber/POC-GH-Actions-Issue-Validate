@@ -37,6 +37,7 @@ def validate(body):
  
         # Write the updated environment variable to a file
         print(f"ISSUE_DETECTED=yes")
+        print("::set-output name=ISSUE_DETECTED::yes")
         #logger.error(f"[DualAccessValidator] error validating issue: {e}")
 
 validate(sys.argv[1])
