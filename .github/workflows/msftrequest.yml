@@ -29,5 +29,5 @@ jobs:
           pwd
       - name: Validate Issue
         run: python ./src/validate_issue.py "${{ github.event.issue.body }}"
- d
+ 
         
