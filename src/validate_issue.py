@@ -34,8 +34,7 @@ def validate(body):
 
         return "matches"
     except Exception as e:
-        os["issueDetected"]= "yes"
+        os.environ["issueDetected"]= "yes"
         logger.error(f"[DualAccessValidator] error validating issue: {e}")
-        raise e
 
 validate(sys.argv[1])
