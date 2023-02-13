@@ -1,7 +1,0 @@
-#!/bin/sh
-
-# Gives some advice on running the vpn on linux
-# Last thing `make linux` runs
-
-echo 'Non OSX OSes are not officially supported'
-echo 'Your certificate has been saved to pkcs.p12, add it to your vpn manager by hand now.'

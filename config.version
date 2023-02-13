@@ -1,4 +1,0 @@
-# Bumping the number in this file to a higher version will trigger a message to users
-# that they must update their viscosity configs. Do this only if there is a major change
-# to site configurations or tooling. Don't annoy users for trivial updates.
-version:4
