@@ -36,7 +36,7 @@ jobs:
           echo "issueDetected: ${{ env.issueDetected }}"
 
       - name: Check if a comment should be posted
-        if: env.issueDetected == 'yes'
+        if: steps.validate.outputs.ISSUE_DETECTED == 'yes'
         uses: actions/github-script@v3
         with:
           script: |
