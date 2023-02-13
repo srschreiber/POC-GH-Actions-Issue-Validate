@@ -13,17 +13,7 @@ jobs:
     steps:
       - name: Validate Issue
         run: |
-          ISSUE_NUMBER=${{ github.event.issue.number }}
-          PAYLOAD=$(cat <<EOF
-          {
-            "issue_number": $ISSUE_NUMBER
-          }
-          EOF
-          )
-          API_ENDPOINT=https://it-offboarding-staging-general-2-ash1-iad.service.ash1-iad.github.net/dual_access/validate
-          echo $API_ENDPOINT
-          echo $PAYLOAD
-          curl -X POST $API_ENDPOINT \
-          -d "$PAYLOAD"
+          pip install -r requirements.txt
+          python src/validate_issue.py "${{ github.event.issue.body }}""
 
         
