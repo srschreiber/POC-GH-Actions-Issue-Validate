@@ -4,10 +4,7 @@
 # documentation.
 
 name: MSFT Request
-on:
-  issues:
-    types:
-      - labeled
+on: [issues]
 jobs:
   validate:
     runs-on: ubuntu-latest
