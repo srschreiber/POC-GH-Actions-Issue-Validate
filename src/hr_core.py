@@ -51,7 +51,7 @@ class HrCore:
         return json["personnelNumber"]
 
     
-    def __get_hr_api_bearer_token(self, target_client_idi) -> str:
+    def __get_hr_api_bearer_token(self, target_client_id) -> str:
         data = {
             "grant_type": "client_credentials",
             "client_id": self.client_id,
