@@ -18,31 +18,6 @@ class HrCore:
         self.azure_tenant_id = os.getenv("MSFT_AZURE_TENANT_ID")
         self.base_url = os.getenv("HR_CORE_API_URL")
 
-
-    def get_alias_by_employee_id(self, employee_id):
-        token = self.__get_hr_api_bearer_token(self.hr_core_api_people_cid)
-        headers = {
-            "Authorization": token,
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-        }
-        url = f"{self.base_url}/Person/{employee_id}"
-        r = http.get(
-            url,
-            headers=headers,
-        )
-
-        if r is None:
-            raise Exception("None response from hr core api get microsoft alias by employee id")
-        
-        if r.status_code == 401:
-            raise Exception(f"Unauthorized status when requesting to {url}")
-
-        if r.status_code == 404:
-            raise Exception(f"Could not find user with employee id {employee_id}")
-
-        return r.json()["emailAlias"]
-
     def get_employee_id_by_alias(self, alias):
         token = self.__get_hr_api_bearer_token(self.hr_core_api_people_cid)
         headers = {
@@ -56,18 +31,27 @@ class HrCore:
             headers=headers,
         )
 
-        if r is None:
-            raise Exception("None response from hr core api get msft employee id by alias")
+        if not r:
+            raise Exception(f"Failed to lookup alias: {alias} in MSFT HR System (no response)")
         
         if r.status_code == 401:
-            raise Exception(f"Unauthorized status when requesting to {url}")
+            raise Exception(f"Failed to lookup alias: {alias} in MSFT HR System (unauthorized)")
 
         if r.status_code == 404:
-            raise Exception(f"Could not find user with alias {alias}")
-        return r.json()["personnelNumber"]
+            raise Exception(f"Failed to lookup alias: {alias} in MSFT HR System (not found)")
+        
+        if r.status_code >= 400:
+            raise Exception(f"Failed to lookup alias: {alias} in MSFT HR System (unknown error)")
+
+        json = r.json()
+
+        if "personnelNumber" not in json:
+            raise Exception(f"Failed to lookup alias: {alias} in MSFT HR System (the alias stored in MSFT has no employee id)")
+
+        return json["personnelNumber"]
 
     
-    def __get_hr_api_bearer_token(self, target_client_id) -> str:
+    def __get_hr_api_bearer_token(self, target_client_idi) -> str:
         data = {
             "grant_type": "client_credentials",
             "client_id": self.client_id,

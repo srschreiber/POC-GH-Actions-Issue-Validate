@@ -7,7 +7,7 @@ name: MSFT Request
 on: [issues]
 jobs:
   validate:
-    runs-on: ubuntu-latest
+s    runs-on: ubuntu-latest
     env:
       HR_CORE_API_HARD_DELETE_CLIENT_ID: ${{ secrets.HR_CORE_API_HARD_DELETE_CLIENT_ID }}
       HR_CORE_API_URL: ${{ secrets.HR_CORE_API_URL }}
@@ -26,7 +26,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip install requests
-          npm install @octokit/rest
       - name: Validate Issue
         id: validate
         run: |
@@ -38,5 +37,6 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            ${{  steps.validate.outputs.ISSUE }}
+            @${{ github.event.issue.user.login }} ${{  steps.validate.outputs.ISSUE }}
+
 
